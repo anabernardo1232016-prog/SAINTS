@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAINTS - Peaky Blinders</title>
-    <link rel="shortcut icon" href="#">
+    <title>SAINTS</title>
     <link rel="stylesheet" href="style.css">
 
-    <!-- Firebase CDN (Versão Compat) -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <!-- SDKs do Firebase via CDN (Compatível) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-<!-- Configuração do Firebase -->
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyCKcxc_jD1w0Y9qvz3Ir1wOcG7pSNoIBJI",
-        authDomain: "saint-e4b5c.firebaseapp.com",
-        databaseURL: "https://saint-e4b5c-default-rtdb.firebaseio.com",
-        projectId: "saint-e4b5c",
-        storageBucket: "saint-e4b5c.firebasestorage.app",
-        messagingSenderId: "731479169727",
-        appId: "1:731479169727:web:820250dbdb0e248ffd840a",
-        measurementId: "G-CH6XWFBL09"
-    };
+    <!-- Configuração com as tuas novas chaves -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDq6XasvHYMt3VfPKlPPJR9-w5rxH2ynfY",
+            authDomain: "saint-2e330.firebaseapp.com",
+            databaseURL: "https://saint-2e330-default-rtdb.firebaseio.com",
+            projectId: "saint-2e330",
+            storageBucket: "saint-2e330.firebasestorage.app",
+            messagingSenderId: "239926428090",
+            appId: "1:239926428090:web:1704b4f8ff59d7750e1d83",
+            measurementId: "G-V5KJRBKJVT"
+        };
 
-    // Inicializa o Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        console.log("Firebase conectado com sucesso!");
     </script>
 </head>
 <body>
