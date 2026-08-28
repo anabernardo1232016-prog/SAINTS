@@ -6,21 +6,14 @@
     <title>SAINTS</title>
     <link rel="stylesheet" href="style.css">
 
-    <!-- SDKs do Firebase via CDN (Compatível) -->
+    <!-- SDKs do Firebase via CDN (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-    <!-- Configuração do Firebase (EUA / saint-2e330) -->
+    <!-- Configuração correta com base na tua imagem -->
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDq6XasvHYMt3VfPKlPPJR9-w5rxH2ynfY",
-            authDomain: "saint-2e330.firebaseapp.com",
-            databaseURL: "https://saint-2e330-default-rtdb.firebaseio.com",
-            projectId: "saint-2e330",
-            storageBucket: "saint-2e330.firebasestorage.app",
-            messagingSenderId: "239926428090",
-            appId: "1:239926428090:web:1704b4f8ff59d7750e1d83",
-            measurementId: "G-V5KJRBKJVT"
+            databaseURL: "https://saint-e4b5c-default-rtdb.firebaseio.com"
         };
 
         firebase.initializeApp(firebaseConfig);
