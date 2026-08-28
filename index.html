@@ -8,26 +8,25 @@
     <link rel="stylesheet" href="style.css">
 
     <!-- Firebase CDN (Versão Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-    <!-- Configuração do Firebase com a databaseURL -->
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCKcxc_jD1w0Y9qvz3Ir1wOcG7pSNoIBJI",
-            authDomain: "saint-e4b5c.firebaseapp.com",
-            databaseURL: "https://saint-e4b5c-default-rtdb.firebaseio.com",
-            projectId: "saint-e4b5c",
-            storageBucket: "saint-e4b5c.firebasestorage.app",
-            messagingSenderId: "731479169727",
-            appId: "1:731479169727:web:820250dbdb0e248ffd840a",
-            measurementId: "G-CH6XWFBL09"
-        };
+<!-- Configuração do Firebase -->
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCKcxc_jD1w0Y9qvz3Ir1wOcG7pSNoIBJI",
+        authDomain: "saint-e4b5c.firebaseapp.com",
+        databaseURL: "https://saint-e4b5c-default-rtdb.firebaseio.com",
+        projectId: "saint-e4b5c",
+        storageBucket: "saint-e4b5c.firebasestorage.app",
+        messagingSenderId: "731479169727",
+        appId: "1:731479169727:web:820250dbdb0e248ffd840a",
+        measurementId: "G-CH6XWFBL09"
+    };
 
-        // Inicializar o Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        console.log("Firebase Saint conectado com sucesso!");
+    // Inicializa o Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
     </script>
 </head>
 <body>
