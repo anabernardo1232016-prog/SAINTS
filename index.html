@@ -31,24 +31,21 @@
 
     <!-- Script do Firebase -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
+        // Importa apenas a função principal do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
-        // Your web app's Firebase configuration
+        // Configuração do teu projeto
         const firebaseConfig = {
             apiKey: "AIzaSyBagsJHUH_lpTxf9JwVzfnsN7tI9t3gde8",
             authDomain: "saints-bf9c6.firebaseapp.com",
             projectId: "saints-bf9c6",
             storageBucket: "saints-bf9c6.firebasestorage.app",
             messagingSenderId: "1045547655529",
-            appId: "1:1045547655529:web:639161bb10087669935df8",
-            measurementId: "G-PNHW2T5J9W"
+            appId: "1:1045547655529:web:639161bb10087669935df8"
         };
 
-        // Initialize Firebase
+        // Inicializa o Firebase sem carregar o Analytics
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         
         console.log("Firebase inicializado com sucesso!");
     </script>
