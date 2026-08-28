@@ -7,23 +7,24 @@
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Firebase CDN (Versão Compat simples igual ao teu outro site) -->
+    <!-- Firebase CDN (Versão Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-    <!-- Inicialização das credenciais do novo projeto (saint-e4b5c) -->
+    <!-- Configuração do Firebase com a databaseURL -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCKcxc_jD1w0Y9qvz3Ir1wOcG7pSNoIBJI",
             authDomain: "saint-e4b5c.firebaseapp.com",
+            databaseURL: "https://saint-e4b5c-default-rtdb.firebaseio.com",
             projectId: "saint-e4b5c",
             storageBucket: "saint-e4b5c.firebasestorage.app",
             messagingSenderId: "731479169727",
-            appId: "1:731479169727:web:376bc7a72fe9ccfafd840a",
-            measurementId: "G-NT9G51QZXQ"
+            appId: "1:731479169727:web:820250dbdb0e248ffd840a",
+            measurementId: "G-CH6XWFBL09"
         };
 
-        // Inicializa o Firebase no formato Compat
+        // Inicializar o Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         console.log("Firebase Saint conectado com sucesso!");
