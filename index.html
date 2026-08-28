@@ -10,12 +10,12 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-    <!-- Configuração com as tuas novas chaves -->
+    <!-- Configuração do Firebase (EUA / saint-2e330) -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDq6XasvHYMt3VfPKlPPJR9-w5rxH2ynfY",
             authDomain: "saint-2e330.firebaseapp.com",
-            databaseURL: "https://saint-2e330-default-rtdb.europe-west1.firebasedatabase.app"",
+            databaseURL: "https://saint-2e330-default-rtdb.firebaseio.com",
             projectId: "saint-2e330",
             storageBucket: "saint-2e330.firebasestorage.app",
             messagingSenderId: "239926428090",
@@ -25,7 +25,6 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        console.log("Firebase conectado com sucesso!");
     </script>
 </head>
 <body>
