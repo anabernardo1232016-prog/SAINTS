@@ -3,39 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="#">
     <title>SAINTS - Peaky Blinders</title>
+    <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .item-compacto {
-            background: #120e0c;
-            border: 1px solid #2e231d;
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-        .item-compacto-info {
-            flex: 1;
-            font-size: 0.9rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-    </style>
 </head>
 <body>
 
-    <!-- Script do Firebase -->
+    <!-- Inicialização do Firebase limpa (sem erros de Analytics/Cookies) -->
     <script type="module">
-        // Importa apenas a função principal do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 
-        // Configuração do teu projeto
         const firebaseConfig = {
             apiKey: "AIzaSyBagsJHUH_lpTxf9JwVzfnsN7tI9t3gde8",
             authDomain: "saints-bf9c6.firebaseapp.com",
@@ -45,20 +22,20 @@
             appId: "1:1045547655529:web:639161bb10087669935df8"
         };
 
-        // Inicializa o Firebase sem carregar o Analytics
         const app = initializeApp(firebaseConfig);
-        
         console.log("Firebase inicializado com sucesso!");
     </script>
 
+    <!-- BANNER DE CABEÇALHO -->
     <header class="header-principal">
         <h1>SAINTS</h1>
         <p class="sub-peaky">"No final... todos morremos."</p>
     </header>
 
-    <nav class="menu-navegacao" style="flex-wrap: wrap;">
+    <!-- MENU DE NAVEGAÇÃO -->
+    <nav class="menu-navegacao">
         <ul>
-            <li id="btn-inicio" class="ativo" onclick="mudarAba('inicio')">⛺ Início</li>
+            <li id="btn-inicio" class="ativo" onclick="mudarAba('inicio')">👍 Início</li>
             <li id="btn-reunioes" onclick="mudarAba('reunioes')">🗣️ Reuniões</li>
             <li id="btn-tarefas" onclick="mudarAba('tarefas')">📋 Tarefas</li>
             <li id="btn-produtos" onclick="mudarAba('produtos')">🏷️ Preços de Produtos</li>
@@ -75,11 +52,12 @@
         </ul>
     </nav>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="conteudo">
         
         <!-- ABA INÍCIO -->
         <div id="aba-inicio" class="aba">
-            <section class="boas-vindas card-banner" style="background-image: linear-gradient(rgba(10,8,7,0.85), rgba(10,8,7,0.95)), url('https://picfiles.alphacoders.com/516/516506.jpg');">
+            <section class="boas-vindas card-banner">
                 <span class="tag-vermelha">BIRMINGHAM 1919</span>
                 <div class="linha-titulo">
                     <h2>Visão Geral</h2>
@@ -90,19 +68,19 @@
 
             <section class="grid-cards">
                 <div class="card">
-                    <span class="card-titulo">Reuniões Registadas</span>
+                    <span class="card-titulo">REUNIÕES REGISTADAS</span>
                     <span id="contador-reunioes" class="card-valor">0</span>
                 </div>
                 <div class="card">
-                    <span class="card-titulo">Tarefas Pendentes</span>
+                    <span class="card-titulo">TAREFAS PENDENTES</span>
                     <span id="contador-tarefas" class="card-valor">0</span>
                 </div>
                 <div class="card">
-                    <span class="card-titulo">Pedidos de Clientes Pendentes</span>
+                    <span class="card-titulo">PEDIDOS DE CLIENTES PENDENTES</span>
                     <span id="contador-pedidos-clientes" class="card-valor">0</span>
                 </div>
                 <div class="card">
-                    <span class="card-titulo">Encomendas Feitas</span>
+                    <span class="card-titulo">ENCOMENDAS FEITAS</span>
                     <span id="contador-encomendas" class="card-valor">0</span>
                 </div>
             </section>
@@ -110,7 +88,7 @@
             <section class="card card-largo">
                 <h3>📋 Próximas Tarefas</h3>
                 <div id="resumo-tarefas">
-                    <p style="color: #8c7b6c;">A carregar dados...</p>
+                    <p style="color: #8c7b6c;">Tudo concluído. 🎉</p>
                 </div>
             </section>
         </div>
@@ -197,164 +175,66 @@
         <!-- ABA PEDIDOS DE CLIENTES -->
         <div id="aba-clientes" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">CLIENTES</span>
+                <span class="tag-vermelha">VENDAS</span>
                 <h2>Pedidos de Clientes</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Registar Novo Pedido de Cliente (Produtos)</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarPedidoCliente(event)">
-                    <input type="text" id="cli-nome" placeholder="Nome do Cliente" class="input-tarefa" required>
-                    <div style="margin-top: 10px; background: #120e0c; padding: 10px; border-radius: 4px; border: 1px solid #2e231d;">
-                        <label style="color: #d4c3ab; font-size: 0.9rem; display: block; margin-bottom: 5px;">🛒 Adicionar Produto da Tabela:</label>
-                        <div style="display: flex; gap: 8px;">
-                            <select id="cli-select-produto" class="input-tarefa" style="flex: 2; margin-top: 0;">
-                                <option value="">Selecionar produto...</option>
-                            </select>
-                            <input type="number" id="cli-qtd" placeholder="Qtd" value="1" min="1" class="input-tarefa" style="flex: 1; margin-top: 0; max-width: 80px;">
-                            <button type="button" onclick="adicionarItemAoPedido()" class="btn-guardar" style="margin-top: 0;">Adicionar</button>
-                        </div>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <label style="color: #d4c3ab; font-size: 0.9rem; display: block; margin-bottom: 3px;">Valor Total (€):</label>
-                        <input type="number" step="0.01" id="cli-valor" placeholder="0.00" class="input-tarefa" required>
-                    </div>
-                    <input type="hidden" id="cli-pedido" value="">
-                    <button type="submit" class="btn-guardar" style="margin-top: 12px;">Guardar Pedido de Produtos</button>
-                </form>
-            </section>
-            <section class="card card-largo" style="margin-top: 20px;">
-                <h3 class="card-subtitulo">Lista de Pedidos Pendentes</h3>
-                <div id="lista-pedidos-clientes" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Gestão de pedidos pendentes dos clientes.</p>
             </section>
         </div>
 
         <!-- ABA ENCOMENDAS FEITAS -->
         <div id="aba-encomendas" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">COMPRAS / FORNECEDORES</span>
+                <span class="tag-vermelha">LOGÍSTICA</span>
                 <h2>Encomendas Feitas</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Registar Encomenda Feita (Manual)</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarEncomendaFeita(event)">
-                    <input type="text" id="enc-pessoa" placeholder="Nome da Pessoa" class="input-tarefa" required>
-                    <input type="text" id="enc-empresa" placeholder="Nome da Empresa" class="input-tarefa" style="margin-top: 8px;" required>
-                    <textarea id="enc-pedido" placeholder="O que foi pedido..." class="input-tarefa" style="margin-top: 8px; height: 60px;" required></textarea>
-                    <input type="number" step="0.01" id="enc-gasto" placeholder="Quanto foi gasto (€)" class="input-tarefa" style="margin-top: 8px;" required>
-                    <button type="submit" class="btn-guardar" style="margin-top: 12px;">Guardar Encomenda</button>
-                </form>
-            </section>
-            <section class="card card-largo" style="margin-top: 20px;">
-                <h3 class="card-subtitulo">Encomendar Armas a Empresa (Usar Tabela de Armas)</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarEncomendaArmaEmpresa(event)">
-                    <input type="text" id="enc-arma-pessoa" placeholder="Nome da Pessoa" class="input-tarefa" required>
-                    <input type="text" id="enc-arma-empresa" placeholder="Nome da Empresa Fornecedora" class="input-tarefa" style="margin-top: 8px;" required>
-                    <div style="margin-top: 10px; background: #120e0c; padding: 10px; border-radius: 4px; border: 1px solid #2e231d;">
-                        <label style="color: #d4c3ab; font-size: 0.9rem; display: block; margin-bottom: 5px;">⚔️ Adicionar Arma da Tabela:</label>
-                        <div style="display: flex; gap: 8px;">
-                            <select id="enc-select-arma" class="input-tarefa" style="flex: 2; margin-top: 0;">
-                                <option value="">Selecionar arma...</option>
-                            </select>
-                            <input type="number" id="enc-arma-qtd" placeholder="Qtd" value="1" min="1" class="input-tarefa" style="flex: 1; margin-top: 0; max-width: 80px;">
-                            <button type="button" onclick="adicionarItemEncomendaArma()" class="btn-guardar" style="margin-top: 0;">Adicionar</button>
-                        </div>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <label style="color: #d4c3ab; font-size: 0.9rem; display: block; margin-bottom: 3px;">Gasto Total (€):</label>
-                        <input type="number" step="0.01" id="enc-arma-gasto" placeholder="0.00" class="input-tarefa" required>
-                    </div>
-                    <input type="hidden" id="enc-arma-pedido-texto" value="">
-                    <button type="submit" class="btn-guardar" style="margin-top: 12px;">Guardar Encomenda de Armas</button>
-                </form>
-            </section>
-            <section class="card card-largo" style="margin-top: 20px;">
-                <h3 class="card-subtitulo">Lista de Encomendas Feitas</h3>
-                <div id="lista-encomendas" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Registo de encomendas concluídas.</p>
             </section>
         </div>
 
         <!-- ABA SPOTS DE VENDAS -->
         <div id="aba-vendas" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">LOCAIS</span>
+                <span class="tag-vermelha">MAPA</span>
                 <h2>Spots de Vendas</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Adicionar Local de Venda</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarSpotVenda(event)">
-                    <input type="text" id="venda-local" placeholder="Nome do local (ex: Annesburg)" class="input-tarefa" required>
-                    <input type="text" id="venda-item" placeholder="Oq se vende (ex: Moshinne)" class="input-tarefa" style="margin-top: 8px;" required>
-                    <input type="url" id="venda-foto" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa" style="margin-top: 8px;">
-                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Spot</button>
-                </form>
-            </section>
-            <section class="card card-largo">
-                <h3 class="card-subtitulo">Lista de Spots de Vendas</h3>
-                <div id="lista-spots-vendas" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Localizações estratégicas de venda.</p>
             </section>
         </div>
 
         <!-- ABA SPOT DE PLANTAS -->
         <div id="aba-plantas" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">BOTÂNICA</span>
+                <span class="tag-vermelha">RECURSOS</span>
                 <h2>Spot de Plantas</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Adicionar Spot de Planta</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarPlanta(event)">
-                    <input type="text" id="planta-local" placeholder="Nome do local" class="input-tarefa" required>
-                    <input type="text" id="planta-item" placeholder="Oq se colhe (ex: Papoulas)" class="input-tarefa" style="margin-top: 8px;" required>
-                    <input type="url" id="planta-foto" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa" style="margin-top: 8px;">
-                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Spot</button>
-                </form>
-            </section>
-            <section class="card card-largo">
-                <h3 class="card-subtitulo">Lista de Spots de Plantas</h3>
-                <div id="lista-plantas" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Localizações de apanha de plantas.</p>
             </section>
         </div>
 
         <!-- ABA SPOT DE FRUTAS -->
         <div id="aba-frutas" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">POMAR</span>
+                <span class="tag-vermelha">COLHEITAS</span>
                 <h2>Spot de Frutas</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Adicionar Spot de Fruta</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarFruta(event)">
-                    <input type="text" id="fruta-local" placeholder="Nome do local" class="input-tarefa" required>
-                    <input type="text" id="fruta-item" placeholder="Oq se colhe (ex: Peras)" class="input-tarefa" style="margin-top: 8px;" required>
-                    <input type="url" id="fruta-foto" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa" style="margin-top: 8px;">
-                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Spot</button>
-                </form>
-            </section>
-            <section class="card card-largo">
-                <h3 class="card-subtitulo">Lista de Spots de Frutas</h3>
-                <div id="lista-frutas" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Localizações de apanha de frutas.</p>
             </section>
         </div>
 
         <!-- ABA SPOTS DE CRAFT -->
         <div id="aba-craft" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">FABRICAÇÃO</span>
+                <span class="tag-vermelha">PRODUÇÃO</span>
                 <h2>Spots de Craft</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Adicionar Local de Craft</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarSpotCraft(event)">
-                    <input type="text" id="craft-local" placeholder="Nome do local" class="input-tarefa" required>
-                    <input type="text" id="craft-item" placeholder="Oq se produz" class="input-tarefa" style="margin-top: 8px;" required>
-                    <input type="text" id="craft-requisitos" placeholder="Requisitos / Ferramentas (opcional)" class="input-tarefa" style="margin-top: 8px;">
-                    <input type="url" id="craft-foto" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa" style="margin-top: 8px;">
-                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Spot</button>
-                </form>
-            </section>
-            <section class="card card-largo">
-                <h3 class="card-subtitulo">Lista de Spots de Craft</h3>
-                <div id="lista-spots-craft" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Locais de bancadas de craft.</p>
             </section>
         </div>
 
@@ -365,110 +245,72 @@
                 <h2>Crafts SAINTS</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Adicionar Novo Craft SAINTS</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarCraftSaint(event)">
-                    <input type="text" id="cs-nome" placeholder="Nome do Item (ex: Empunhadura Clandestina)" class="input-tarefa" required>
-                    <textarea id="cs-ingredientes" placeholder="Ingredientes necessários..." class="input-tarefa" style="margin-top: 8px; height: 60px;" required></textarea>
-                    <input type="text" id="cs-resultado" placeholder="O que produz (ex: = 2 Empunhaduras)" class="input-tarefa" style="margin-top: 8px;" required>
-                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Craft SAINTS</button>
-                </form>
-            </section>
-            <section class="card card-largo" style="margin-top: 20px;">
-                <h3 class="card-subtitulo">Lista de Crafts SAINTS</h3>
-                <div id="lista-crafts-saints" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Receitas de fabrico da organização.</p>
             </section>
         </div>
 
         <!-- ABA ROUPA -->
         <div id="aba-roupa" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">VESTUÁRIO</span>
-                <h2>Roupa / Guarda-Roupa</h2>
+                <span class="tag-vermelha">FARDAMENTO</span>
+                <h2>Roupa da Gangue</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Adicionar Conjunto de Roupa</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarRoupa(event)">
-                    <input type="text" id="roupa-nome" placeholder="Nome do Conjunto / Peça" class="input-tarefa" required>
-                    <input type="url" id="roupa-foto" placeholder="Link da Imagem / Foto do Conjunto" class="input-tarefa" style="margin-top: 8px;" required>
-                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Roupa</button>
-                </form>
-            </section>
-            <section class="card card-largo" style="margin-top: 20px;">
-                <h3 class="card-subtitulo">Lista de Roupas</h3>
-                <div id="lista-roupas" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Conjuntos de roupa oficiais.</p>
             </section>
         </div>
 
         <!-- ABA RECEITAS -->
         <div id="aba-receitas" class="aba" style="display: none;">
             <section class="boas-vindas">
-                <span class="tag-vermelha">MANUAIS</span>
-                <h2>Receitas</h2>
+                <span class="tag-vermelha">LIVRO DE RECEITAS</span>
+                <h2>Receitas de Produção</h2>
             </section>
             <section class="card card-largo">
-                <h3 class="card-subtitulo">Adicionar Receita</h3>
-                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarReceita(event)">
-                    <input type="text" id="rec-nome" placeholder="Nome do Item / Produto" class="input-tarefa" required>
-                    <textarea id="rec-ingredientes" placeholder="Ingredientes e quantidades..." class="input-tarefa" style="margin-top: 8px; height: 60px;" required></textarea>
-                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Receita</button>
-                </form>
-            </section>
-            <section class="card card-largo">
-                <h3 class="card-subtitulo">Receitas Guardadas</h3>
-                <div id="lista-receitas" style="margin-top: 15px;"></div>
+                <p style="color:#7a6c5d;">Lista completa de ingredientes e combinações.</p>
             </section>
         </div>
 
     </main>
 
+    <!-- SCRIPT DE NAVEGAÇÃO E LÓGICA DO SITE -->
     <script>
         let tarefas = [];
         let produtos = [];
         let tabelaArmas = [];
-        let pedidosClientes = [];
-        let encomendasFeitas = [];
-        let spotsVendas = [];
-        let spotsPlantas = [];
-        let spotsFrutas = [];
-        let spotsCraft = [];
         let reunioes = [];
-        let roupas = [];
-        let receitas = [];
-        
-        let craftsSaints = [
-            { nome: "Empunhadura Clandestina", ingredientes: "1x Barra de Ouro\n2x Barras de Ferro\n5x Minérios de Prata\n5x Minérios de Cobre\n2x Galhos", resultado: "= 2 Empunhaduras" },
-            { nome: "Tambor", ingredientes: "2x Barras de Cobre\n2x Barras de Ouro\n5x Seivas\n15x Minérios de Prata", resultado: "= 2x Tambor's" },
-            { nome: "Molas", ingredientes: "5x Areia\n10x Minérios de Cobre\n2x Barras de Ferro", resultado: "= 10 Molas" },
-            { nome: "Coice De Mula", ingredientes: "5x Álcool\n20x Peras", resultado: "= 10x Coices de Mula" },
-            { nome: "Resina De Opio", ingredientes: "20x Papoulas\n20x Seiva", resultado: "= 10x Resinas" }
-        ];
 
         function mudarAba(nomeAba) {
-            ['inicio', 'reunioes', 'tarefas', 'produtos', 'armas', 'clientes', 'encomendas', 'vendas', 'plantas', 'frutas', 'craft', 'craftsaints', 'roupa', 'receitas'].forEach(aba => {
+            const abas = ['inicio', 'reunioes', 'tarefas', 'produtos', 'armas', 'clientes', 'encomendas', 'vendas', 'plantas', 'frutas', 'craft', 'craftsaints', 'roupa', 'receitas'];
+            
+            abas.forEach(aba => {
                 const elAba = document.getElementById('aba-' + aba);
                 const elBtn = document.getElementById('btn-' + aba);
                 if (elAba) elAba.style.display = 'none';
                 if (elBtn) elBtn.classList.remove('ativo');
             });
-            document.getElementById('aba-' + nomeAba).style.display = 'block';
-            document.getElementById('btn-' + nomeAba).classList.add('ativo');
 
-            if(nomeAba === 'clientes') atualizarSelectProdutos();
-            if(nomeAba === 'encomendas') atualizarSelectArmasEncomenda();
+            const abaAlvo = document.getElementById('aba-' + nomeAba);
+            const btnAlvo = document.getElementById('btn-' + nomeAba);
+            if (abaAlvo) abaAlvo.style.display = 'block';
+            if (btnAlvo) btnAlvo.classList.add('ativo');
         }
 
         function atualizarHorasEData() {
             const agora = new Date();
-            document.getElementById('relogio').textContent = agora.toTimeString().split(' ')[0];
-            document.getElementById('data-atual').textContent = agora.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            const relogio = document.getElementById('relogio');
+            const dataAtual = document.getElementById('data-atual');
+            if (relogio) relogio.textContent = agora.toTimeString().split(' ')[0];
+            if (dataAtual) dataAtual.textContent = agora.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
         }
         atualizarHorasEData();
         setInterval(atualizarHorasEData, 1000);
 
-        // REUNIÕES
         function renderizarReunioes() {
             const container = document.getElementById('lista-reunioes');
-            document.getElementById('contador-reunioes').textContent = reunioes.length;
+            const contador = document.getElementById('contador-reunioes');
+            if (contador) contador.textContent = reunioes.length;
+            if (!container) return;
             container.innerHTML = reunioes.length === 0 ? '<p style="color:#7a6c5d;">Nenhuma reunião registada.</p>' : '';
             reunioes.forEach((r, i) => {
                 container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px;">
@@ -489,18 +331,20 @@
         }
         function removerReuniao(i) { reunioes.splice(i, 1); renderizarReunioes(); }
 
-        // TAREFAS
         function renderizarTarefas() {
             const lista = document.getElementById('lista-tarefas');
             const resumo = document.getElementById('resumo-tarefas');
-            document.getElementById('contador-tarefas').textContent = tarefas.length;
-            lista.innerHTML = tarefas.length === 0 ? '<li style="color:#7a6c5d;">Nenhuma tarefa pendente.</li>' : '';
-            resumo.innerHTML = tarefas.length === 0 ? '<p style="color:#7a6c5d;">Tudo concluído. 🎉</p>' : '<ul style="padding:0;list-style:none;">' + tarefas.slice(0,3).map(t => `<li style="color:#b8a894; padding:4px 0;">• ${t}</li>`).join('') + '</ul>';
-            tarefas.forEach((t, i) => {
-                lista.innerHTML += `<li style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #36281e; color:#b8a894;">
-                    <span>• ${t}</span><button onclick="removerTarefa(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
-                </li>`;
-            });
+            const contador = document.getElementById('contador-tarefas');
+            if (contador) contador.textContent = tarefas.length;
+            if (lista) lista.innerHTML = tarefas.length === 0 ? '<li style="color:#7a6c5d;">Nenhuma tarefa pendente.</li>' : '';
+            if (resumo) resumo.innerHTML = tarefas.length === 0 ? '<p style="color:#7a6c5d;">Tudo concluído. 🎉</p>' : '<ul style="padding:0;list-style:none;">' + tarefas.slice(0,3).map(t => `<li style="color:#b8a894; padding:4px 0;">• ${t}</li>`).join('') + '</ul>';
+            if (lista) {
+                tarefas.forEach((t, i) => {
+                    lista.innerHTML += `<li style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #36281e; color:#b8a894;">
+                        <span>• ${t}</span><button onclick="removerTarefa(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
+                    </li>`;
+                });
+            }
         }
         function adicionarTarefa(e) { 
             e.preventDefault(); 
@@ -511,16 +355,15 @@
         }
         function removerTarefa(i) { tarefas.splice(i, 1); renderizarTarefas(); }
 
-        // PREÇOS DE PRODUTOS
         function renderizarProdutos() {
             const lista = document.getElementById('lista-produtos');
+            if (!lista) return;
             lista.innerHTML = produtos.length === 0 ? '<li style="color:#7a6c5d;">Nenhum produto cadastrado.</li>' : '';
             produtos.forEach((p, i) => {
                 lista.innerHTML += `<li style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #36281e; color:#b8a894;">
                     <span>🏷️ ${p.nome}</span><div><strong style="margin-right:15px; color:#c5a059;">${parseFloat(p.preco).toFixed(2)} €</strong><button onclick="removerProduto(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;">✕</button></div>
                 </li>`;
             });
-            atualizarSelectProdutos();
         }
         function adicionarProduto(e) {
             e.preventDefault();
@@ -533,16 +376,15 @@
         }
         function removerProduto(i) { produtos.splice(i, 1); renderizarProdutos(); }
 
-        // PREÇOS ARMAS
         function renderizarTabelaArmas() {
             const lista = document.getElementById('lista-tabela-armas');
+            if (!lista) return;
             lista.innerHTML = tabelaArmas.length === 0 ? '<li style="color:#7a6c5d;">Nenhuma arma cadastrada.</li>' : '';
             tabelaArmas.forEach((a, i) => {
                 lista.innerHTML += `<li style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #36281e; color:#b8a894;">
                     <span>⚔️ ${a.nome}</span><div><strong style="margin-right:15px; color:#c5a059;">${parseFloat(a.preco).toFixed(2)} €</strong><button onclick="removerTabelaArma(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;">✕</button></div>
                 </li>`;
             });
-            atualizarSelectArmasEncomenda();
         }
         function adicionarTabelaArma(e) {
             e.preventDefault();
@@ -554,302 +396,6 @@
             document.getElementById('tabela-arma-nome').value = ''; document.getElementById('tabela-arma-preco').value = '';
         }
         function removerTabelaArma(i) { tabelaArmas.splice(i, 1); renderizarTabelaArmas(); }
-
-        // PEDIDOS DE CLIENTES
-        function atualizarSelectProdutos() {
-            const select = document.getElementById('cli-select-produto');
-            if (!select) return;
-            select.innerHTML = '<option value="">Selecionar produto...</option>';
-            produtos.forEach(p => {
-                select.innerHTML += `<option value="${p.nome}" data-preco="${p.preco}">${p.nome} (${parseFloat(p.preco).toFixed(2)} €)</option>`;
-            });
-        }
-        function adicionarItemAoPedido() {
-            const select = document.getElementById('cli-select-produto');
-            const qtdInput = document.getElementById('cli-qtd');
-            const txtPedido = document.getElementById('cli-pedido');
-            const txtValor = document.getElementById('cli-valor');
-            const nomeProduto = select.value;
-            if (!nomeProduto) return;
-            const qtd = parseInt(qtdInput.value) || 1;
-            const optionSelecionada = select.options[select.selectedIndex];
-            const subtotal = (parseFloat(optionSelecionada.getAttribute('data-preco')) || 0) * qtd;
-            const linhaItem = `${qtd}x ${nomeProduto} (${subtotal.toFixed(2)} €)`;
-            txtPedido.value = txtPedido.value.trim() === '' ? linhaItem : txtPedido.value + '\n' + linhaItem;
-            txtValor.value = (parseFloat(txtValor.value || 0) + subtotal).toFixed(2);
-            select.value = ''; qtdInput.value = '1';
-        }
-        function adicionarPedidoCliente(e) {
-            e.preventDefault();
-            pedidosClientes.push({
-                nome: document.getElementById('cli-nome').value.trim(),
-                pedido: document.getElementById('cli-pedido').value.trim() || "Pedido sem itens.",
-                valor: parseFloat(document.getElementById('cli-valor').value)
-            });
-            renderizarPedidosClientes();
-            document.getElementById('cli-nome').value = ''; document.getElementById('cli-pedido').value = ''; document.getElementById('cli-valor').value = '';
-        }
-        function renderizarPedidosClientes() {
-            const container = document.getElementById('lista-pedidos-clientes');
-            document.getElementById('contador-pedidos-clientes').textContent = pedidosClientes.length;
-            container.innerHTML = pedidosClientes.length === 0 ? '<p style="color:#7a6c5d;">Nenhum pedido de cliente registado.</p>' : '';
-            pedidosClientes.forEach((cli, i) => {
-                container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between;"><strong style="color:#e6dfcc;">👥 Cliente: ${cli.nome}</strong><button onclick="removerPedidoCliente(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button></div>
-                    <p style="color:#b8a894; margin:6px 0; font-size:0.9rem; white-space: pre-line;">${cli.pedido}</p>
-                    <div style="display:flex;justify-content:space-between;border-top:1px solid #36281e;padding-top:6px;margin-top:6px;"><span style="color:#7a6c5d;">Valor Total:</span><strong style="color:#c5a059;">${parseFloat(cli.valor).toFixed(2)} €</strong></div>
-                </div>`;
-            });
-        }
-        function removerPedidoCliente(i) { pedidosClientes.splice(i, 1); renderizarPedidosClientes(); }
-
-        // ENCOMENDAS FEITAS
-        function atualizarSelectArmasEncomenda() {
-            const select = document.getElementById('enc-select-arma');
-            if (!select) return;
-            select.innerHTML = '<option value="">Selecionar arma...</option>';
-            tabelaArmas.forEach(a => {
-                select.innerHTML += `<option value="${a.nome}" data-preco="${a.preco}">${a.nome} (${parseFloat(a.preco).toFixed(2)} €)</option>`;
-            });
-        }
-        function adicionarItemEncomendaArma() {
-            const select = document.getElementById('enc-select-arma');
-            const qtdInput = document.getElementById('enc-arma-qtd');
-            const txtPedido = document.getElementById('enc-arma-pedido-texto');
-            const txtGasto = document.getElementById('enc-arma-gasto');
-            const nomeArma = select.value;
-            if (!nomeArma) return;
-            const qtd = parseInt(qtdInput.value) || 1;
-            const subtotal = (parseFloat(select.options[select.selectedIndex].getAttribute('data-preco')) || 0) * qtd;
-            const linhaItem = `${qtd}x ${nomeArma} (${subtotal.toFixed(2)} €)`;
-            txtPedido.value = txtPedido.value.trim() === '' ? linhaItem : txtPedido.value + '\n' + linhaItem;
-            txtGasto.value = (parseFloat(txtGasto.value || 0) + subtotal).toFixed(2);
-            select.value = ''; qtdInput.value = '1';
-        }
-        function adicionarEncomendaArmaEmpresa(e) {
-            e.preventDefault();
-            encomendasFeitas.push({
-                pessoa: document.getElementById('enc-arma-pessoa').value.trim(),
-                empresa: document.getElementById('enc-arma-empresa').value.trim(),
-                pedido: document.getElementById('enc-arma-pedido-texto').value.trim() || "Encomenda sem itens.",
-                gasto: parseFloat(document.getElementById('enc-arma-gasto').value)
-            });
-            renderizarEncomendas();
-            document.getElementById('enc-arma-pessoa').value = ''; document.getElementById('enc-arma-empresa').value = ''; document.getElementById('enc-arma-pedido-texto').value = ''; document.getElementById('enc-arma-gasto').value = '';
-        }
-        function renderizarEncomendas() {
-            const container = document.getElementById('lista-encomendas');
-            document.getElementById('contador-encomendas').textContent = encomendasFeitas.length;
-            container.innerHTML = encomendasFeitas.length === 0 ? '<p style="color:#7a6c5d;">Nenhuma encomenda feita registada.</p>' : '';
-            encomendasFeitas.forEach((enc, i) => {
-                container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div style="color:#b8a894;"><strong style="color:#e6dfcc;">👤 Pessoa:</strong> ${enc.pessoa}<br><strong style="color:#e6dfcc;">🏢 Empresa:</strong> ${enc.empresa}</div>
-                        <button onclick="removerEncomenda(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
-                    </div>
-                    <p style="color:#b8a894; margin:8px 0; font-size:0.9rem; white-space: pre-line;"><strong style="color:#e6dfcc;">Pedido:</strong><br>${enc.pedido}</p>
-                    <div style="display:flex;justify-content:space-between;border-top:1px solid #36281e;padding-top:6px;margin-top:6px;"><span style="color:#7a6c5d;">Gasto Total:</span><strong style="color:#c5a059;">${parseFloat(enc.gasto).toFixed(2)} €</strong></div>
-                </div>`;
-            });
-        }
-        function adicionarEncomendaFeita(e) {
-            e.preventDefault();
-            encomendasFeitas.push({
-                pessoa: document.getElementById('enc-pessoa').value.trim(),
-                empresa: document.getElementById('enc-empresa').value.trim(),
-                pedido: document.getElementById('enc-pedido').value.trim(),
-                gasto: parseFloat(document.getElementById('enc-gasto').value)
-            });
-            renderizarEncomendas();
-            document.getElementById('enc-pessoa').value = ''; document.getElementById('enc-empresa').value = ''; document.getElementById('enc-pedido').value = ''; document.getElementById('enc-gasto').value = '';
-        }
-        function removerEncomenda(i) { encomendasFeitas.splice(i, 1); renderizarEncomendas(); }
-
-        // SPOTS VENDAS
-        function renderizarSpotsVendas() {
-            const container = document.getElementById('lista-spots-vendas');
-            container.innerHTML = spotsVendas.length === 0 ? '<p style="color:#7a6c5d;">Nenhum spot registado.</p>' : '';
-            spotsVendas.forEach((s, i) => {
-                container.innerHTML += `<div class="item-compacto">
-                    <div class="item-compacto-info">
-                        <span style="color:#b8a894;">📍 <strong style="color:#e6dfcc;">Local:</strong> ${s.local}</span>
-                        <span style="color:#b8a894;"><strong style="color:#e6dfcc;">Vende:</strong> ${s.item}</span>
-                        ${s.foto ? `<button onclick="toggleImagem('venda-${i}')" style="background:#221b14; border:1px solid #423225; color:#c5a059; padding:3px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">🗺️ Ver Imagem</button>` : ''}
-                    </div>
-                    <button onclick="removerSpotVenda(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
-                </div>
-                ${s.foto ? `<div id="venda-${i}" style="display:none; margin-bottom:8px; background:#14100c; padding:8px; border-radius:4px; border:1px solid #36281e;"><img src="${s.foto}" style="max-width:100%; max-height:200px; border-radius:3px; display:block; margin:0 auto;"></div>` : ''}`;
-            });
-        }
-        function adicionarSpotVenda(e) {
-            e.preventDefault();
-            spotsVendas.push({ local: document.getElementById('venda-local').value.trim(), item: document.getElementById('venda-item').value.trim(), foto: document.getElementById('venda-foto').value.trim() });
-            renderizarSpotsVendas();
-            document.getElementById('venda-local').value = ''; document.getElementById('venda-item').value = ''; document.getElementById('venda-foto').value = '';
-        }
-        function removerSpotVenda(i) { spotsVendas.splice(i, 1); renderizarSpotsVendas(); }
-
-        // SPOT DE PLANTAS
-        function renderizarPlantas() {
-            const container = document.getElementById('lista-plantas');
-            container.innerHTML = spotsPlantas.length === 0 ? '<p style="color:#7a6c5d;">Nenhum spot de planta registado.</p>' : '';
-            spotsPlantas.forEach((s, i) => {
-                container.innerHTML += `<div class="item-compacto">
-                    <div class="item-compacto-info">
-                        <span style="color:#b8a894;">🌿 <strong style="color:#e6dfcc;">Local:</strong> ${s.local}</span>
-                        <span style="color:#b8a894;"><strong style="color:#e6dfcc;">Colhe:</strong> ${s.item}</span>
-                        ${s.foto ? `<button onclick="toggleImagem('planta-${i}')" style="background:#221b14; border:1px solid #423225; color:#c5a059; padding:3px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">🗺️ Ver Imagem</button>` : ''}
-                    </div>
-                    <button onclick="removerPlanta(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
-                </div>
-                ${s.foto ? `<div id="planta-${i}" style="display:none; margin-bottom:8px; background:#14100c; padding:8px; border-radius:4px; border:1px solid #36281e;"><img src="${s.foto}" style="max-width:100%; max-height:200px; border-radius:3px; display:block; margin:0 auto;"></div>` : ''}`;
-            });
-        }
-        function adicionarPlanta(e) {
-            e.preventDefault();
-            spotsPlantas.push({ local: document.getElementById('planta-local').value.trim(), item: document.getElementById('planta-item').value.trim(), foto: document.getElementById('planta-foto').value.trim() });
-            renderizarPlantas();
-            document.getElementById('planta-local').value = ''; document.getElementById('planta-item').value = ''; document.getElementById('planta-foto').value = '';
-        }
-        function removerPlanta(i) { spotsPlantas.splice(i, 1); renderizarPlantas(); }
-
-        // SPOT DE FRUTAS
-        function renderizarFrutas() {
-            const container = document.getElementById('lista-frutas');
-            container.innerHTML = spotsFrutas.length === 0 ? '<p style="color:#7a6c5d;">Nenhum spot de fruta registado.</p>' : '';
-            spotsFrutas.forEach((s, i) => {
-                container.innerHTML += `<div class="item-compacto">
-                    <div class="item-compacto-info">
-                        <span style="color:#b8a894;">🍎 <strong style="color:#e6dfcc;">Local:</strong> ${s.local}</span>
-                        <span style="color:#b8a894;"><strong style="color:#e6dfcc;">Colhe:</strong> ${s.item}</span>
-                        ${s.foto ? `<button onclick="toggleImagem('fruta-${i}')" style="background:#221b14; border:1px solid #423225; color:#c5a059; padding:3px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">🗺️ Ver Imagem</button>` : ''}
-                    </div>
-                    <button onclick="removerFruta(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
-                </div>
-                ${s.foto ? `<div id="fruta-${i}" style="display:none; margin-bottom:8px; background:#14100c; padding:8px; border-radius:4px; border:1px solid #36281e;"><img src="${s.foto}" style="max-width:100%; max-height:200px; border-radius:3px; display:block; margin:0 auto;"></div>` : ''}`;
-            });
-        }
-        function adicionarFruta(e) {
-            e.preventDefault();
-            spotsFrutas.push({ local: document.getElementById('fruta-local').value.trim(), item: document.getElementById('fruta-item').value.trim(), foto: document.getElementById('fruta-foto').value.trim() });
-            renderizarFrutas();
-            document.getElementById('fruta-local').value = ''; document.getElementById('fruta-item').value = ''; document.getElementById('fruta-foto').value = '';
-        }
-        function removerFruta(i) { spotsFrutas.splice(i, 1); renderizarFrutas(); }
-
-        // SPOTS CRAFT
-        function renderizarSpotsCraft() {
-            const container = document.getElementById('lista-spots-craft');
-            container.innerHTML = spotsCraft.length === 0 ? '<p style="color:#7a6c5d;">Nenhum spot de craft registado.</p>' : '';
-            spotsCraft.forEach((s, i) => {
-                container.innerHTML += `<div class="item-compacto">
-                    <div class="item-compacto-info">
-                        <span style="color:#b8a894;">🔨 <strong style="color:#e6dfcc;">Local:</strong> ${s.local}</span>
-                        <span style="color:#b8a894;"><strong style="color:#e6dfcc;">Produz:</strong> ${s.item}</span>
-                        ${s.requisitos ? `<span style="color:#7a6c5d; font-size:0.85rem;">(Req: ${s.requisitos})</span>` : ''}
-                        ${s.foto ? `<button onclick="toggleImagem('craft-${i}')" style="background:#221b14; border:1px solid #423225; color:#c5a059; padding:3px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">🗺️ Ver Imagem</button>` : ''}
-                    </div>
-                    <button onclick="removerSpotCraft(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
-                </div>
-                ${s.foto ? `<div id="craft-${i}" style="display:none; margin-bottom:8px; background:#14100c; padding:8px; border-radius:4px; border:1px solid #36281e;"><img src="${s.foto}" style="max-width:100%; max-height:200px; border-radius:3px; display:block; margin:0 auto;"></div>` : ''}`;
-            });
-        }
-        function adicionarSpotCraft(e) {
-            e.preventDefault();
-            spotsCraft.push({ local: document.getElementById('craft-local').value.trim(), item: document.getElementById('craft-item').value.trim(), requisitos: document.getElementById('craft-requisitos').value.trim(), foto: document.getElementById('craft-foto').value.trim() });
-            renderizarSpotsCraft();
-            document.getElementById('craft-local').value = ''; document.getElementById('craft-item').value = ''; document.getElementById('craft-requisitos').value = ''; document.getElementById('craft-foto').value = '';
-        }
-        function removerSpotCraft(i) { spotsCraft.splice(i, 1); renderizarSpotsCraft(); }
-
-        // CRAFTS SAINTS
-        function renderizarCraftsSaints() {
-            const container = document.getElementById('lista-crafts-saints');
-            container.innerHTML = craftsSaints.length === 0 ? '<p style="color:#7a6c5d;">Nenhum craft registado.</p>' : '';
-            craftsSaints.forEach((cs, i) => {
-                container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:flex-start;">
-                    <div style="flex:1;">
-                        <strong style="color:#e6dfcc;">⚜️ ${cs.nome}</strong> <span style="color:#c5a059; font-weight:bold; margin-left:10px;">${cs.resultado}</span>
-                        <p style="color:#b8a894; margin-top:6px; font-size:0.9rem; white-space: pre-line;">${cs.ingredientes}</p>
-                    </div>
-                    <button onclick="removerCraftSaint(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer; margin-left:10px; font-weight:bold;">✕</button>
-                </div>`;
-            });
-        }
-        function adicionarCraftSaint(e) {
-            e.preventDefault();
-            craftsSaints.push({
-                nome: document.getElementById('cs-nome').value.trim(),
-                ingredientes: document.getElementById('cs-ingredientes').value.trim(),
-                resultado: document.getElementById('cs-resultado').value.trim()
-            });
-            renderizarCraftsSaints();
-            document.getElementById('cs-nome').value = ''; document.getElementById('cs-ingredientes').value = ''; document.getElementById('cs-resultado').value = '';
-        }
-        function removerCraftSaint(i) { craftsSaints.splice(i, 1); renderizarCraftsSaints(); }
-
-        // ROUPA (NOME + LINK FOTO)
-        function renderizarRoupas() {
-            const container = document.getElementById('lista-roupas');
-            container.innerHTML = roupas.length === 0 ? '<p style="color:#7a6c5d;">Nenhuma roupa registada.</p>' : '';
-            roupas.forEach((r, i) => {
-                container.innerHTML += `<div class="item-compacto">
-                    <div class="item-compacto-info">
-                        <span style="color:#b8a894;">👕 <strong style="color:#e6dfcc;">Conjunto:</strong> ${r.nome}</span>
-                        ${r.foto ? `<button onclick="toggleImagem('roupa-${i}')" style="background:#221b14; border:1px solid #423225; color:#c5a059; padding:3px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">👔 Ver Imagem</button>` : ''}
-                    </div>
-                    <button onclick="removerRoupa(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
-                </div>
-                ${r.foto ? `<div id="roupa-${i}" style="display:none; margin-bottom:8px; background:#14100c; padding:8px; border-radius:4px; border:1px solid #36281e;"><img src="${r.foto}" style="max-width:100%; max-height:220px; border-radius:3px; display:block; margin:0 auto;"></div>` : ''}`;
-            });
-        }
-        function adicionarRoupa(e) {
-            e.preventDefault();
-            roupas.push({ nome: document.getElementById('roupa-nome').value.trim(), foto: document.getElementById('roupa-foto').value.trim() });
-            renderizarRoupas();
-            document.getElementById('roupa-nome').value = ''; document.getElementById('roupa-foto').value = '';
-        }
-        function removerRoupa(i) { roupas.splice(i, 1); renderizarRoupas(); }
-
-        // TOGGLE IMAGENS
-        function toggleImagem(id) {
-            const el = document.getElementById(id);
-            if(el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // RECEITAS
-        function renderizarReceitas() {
-            const container = document.getElementById('lista-receitas');
-            container.innerHTML = receitas.length === 0 ? '<p style="color:#7a6c5d;">Nenhuma receita registada.</p>' : '';
-            receitas.forEach((r, i) => {
-                container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:flex-start;">
-                    <div style="flex:1;"><strong style="color:#e6dfcc;">📜 ${r.nome}</strong><p style="color:#b8a894; margin-top:6px; white-space: pre-line;">${r.ingredientes}</p></div>
-                    <button onclick="removerReceita(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer; margin-left:10px; font-weight:bold;">✕</button>
-                </div>`;
-            });
-        }
-        function adicionarReceita(e) {
-            e.preventDefault();
-            receitas.push({ nome: document.getElementById('rec-nome').value.trim(), ingredientes: document.getElementById('rec-ingredientes').value.trim() });
-            renderizarReceitas();
-            document.getElementById('rec-nome').value = ''; document.getElementById('rec-ingredientes').value = '';
-        }
-        function removerReceita(i) { receitas.splice(i, 1); renderizarReceitas(); }
-
-        // Inicializar renderizações ao abrir
-        renderizarReunioes();
-        renderizarTarefas();
-        renderizarProdutos();
-        renderizarTabelaArmas();
-        renderizarPedidosClientes();
-        renderizarEncomendas();
-        renderizarSpotsVendas();
-        renderizarPlantas();
-        renderizarFrutas();
-        renderizarSpotsCraft();
-        renderizarCraftsSaints();
-        renderizarRoupas();
-        renderizarReceitas();
     </script>
 </body>
 </html>
