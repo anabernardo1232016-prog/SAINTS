@@ -29,6 +29,30 @@
 </head>
 <body>
 
+    <!-- Script do Firebase -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBagsJHUH_lpTxf9JwVzfnsN7tI9t3gde8",
+            authDomain: "saints-bf9c6.firebaseapp.com",
+            projectId: "saints-bf9c6",
+            storageBucket: "saints-bf9c6.firebasestorage.app",
+            messagingSenderId: "1045547655529",
+            appId: "1:1045547655529:web:639161bb10087669935df8",
+            measurementId: "G-PNHW2T5J9W"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        
+        console.log("Firebase inicializado com sucesso!");
+    </script>
+
     <header class="header-principal">
         <h1>SAINTS</h1>
         <p class="sub-peaky">"No final... todos morremos."</p>
