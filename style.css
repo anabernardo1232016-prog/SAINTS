@@ -1,0 +1,1567 @@
+```css
+/* =========================================================
+   SAINTS — PEAKY BLINDERS
+   GARRISON EDITION
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Libre+Baskerville:wght@400;700&family=Pinyon+Script&display=swap');
+
+
+/* =========================================================
+   PALETA
+   ========================================================= */
+
+:root {
+    --fundo-geral: #090a0a;
+    --fundo-bloco: #101111;
+    --fundo-card: #161817;
+    --fundo-input: #1c1e1d;
+
+    --borda-moldura: #303332;
+    --borda-suave: #414440;
+
+    --texto-principal: #e8e8e3;
+    --texto-secundario: #aaa9a2;
+    --texto-fraco: #777872;
+
+    --cinza-claro: #d5d5ce;
+
+    --bronze: #a28b63;
+    --bronze-claro: #c2ad80;
+
+    --vermelho: #85292c;
+    --vermelho-claro: #a4383b;
+    --vermelho-escuro: #491719;
+
+    --sombra: rgba(0,0,0,0.8);
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    padding-bottom: 70px;
+
+    background:
+        radial-gradient(
+            ellipse at top,
+            rgba(255,255,255,0.035),
+            transparent 42%
+        ),
+        linear-gradient(
+            135deg,
+            #080909,
+            #111312 50%,
+            #080909
+        );
+
+    color: var(--texto-principal);
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 16px;
+
+    background-attachment: fixed;
+}
+
+
+/* =========================================================
+   FILME / TEXTURA
+   ========================================================= */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+    opacity: 0.018;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.3) 0px,
+            rgba(255,255,255,0.3) 1px,
+            transparent 1px,
+            transparent 5px
+        );
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header-principal {
+    position: relative;
+
+    min-height: 300px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    padding: 55px 20px 45px;
+
+    background:
+        linear-gradient(
+            rgba(5,6,6,0.52),
+            rgba(5,6,6,0.86)
+        ),
+        url('https://cdn.discordapp.com/attachments/1251163204478828586/1542793798629855282/image.png?ex=6a928631&is=6a9134b1&hm=fdb942d1537a84a349ccc2ff50bf5129eee407eb9f71a58811f805472a9dff9a&');
+
+    background-size: cover;
+
+    background-position: center;
+
+    border-bottom: 1px solid #353735;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.9),
+        inset 0 -30px 40px rgba(0,0,0,0.5);
+
+    overflow: hidden;
+}
+
+.header-principal::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 15%,
+            rgba(0,0,0,0.72) 100%
+        );
+
+    pointer-events: none;
+}
+
+.header-principal::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 14px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 160px;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--bronze),
+            transparent
+        );
+
+    opacity: 0.55;
+}
+
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.header-principal h1 {
+    position: relative;
+
+    z-index: 2;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: clamp(3.2rem, 7vw, 5rem);
+
+    font-weight: 400;
+
+    letter-spacing: 10px;
+
+    color: #ededE8;
+
+    text-transform: uppercase;
+
+    text-shadow:
+        2px 3px 0 #000,
+        0 7px 22px rgba(0,0,0,0.95);
+}
+
+.sub-peaky {
+    position: relative;
+
+    z-index: 2;
+
+    margin-top: 8px;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 0.8rem;
+
+    font-weight: 300;
+
+    letter-spacing: 4px;
+
+    color: #b9b09f;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   MENU
+   ========================================================= */
+
+.menu-navegacao {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    padding: 9px;
+
+    background:
+        rgba(12,13,13,0.97);
+
+    border-bottom: 1px solid #303231;
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.8);
+}
+
+.menu-navegacao ul {
+    max-width: 1250px;
+
+    margin: auto;
+
+    list-style: none;
+
+    display: flex;
+
+    gap: 5px;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+}
+
+.menu-navegacao li {
+    background:
+        #171918;
+
+    border: 1px solid #323533;
+
+    color: #aaa9a2;
+
+    padding: 8px 13px;
+
+    border-radius: 2px;
+
+    cursor: pointer;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 0.78rem;
+
+    letter-spacing: 1.6px;
+
+    text-transform: uppercase;
+
+    transition: all 0.22s ease;
+}
+
+.menu-navegacao li:hover {
+    background: #202321;
+
+    border-color: #62645f;
+
+    color: #f0f0eb;
+}
+
+.menu-navegacao li.ativo {
+    background:
+        linear-gradient(
+            135deg,
+            #8b292c,
+            #631b1e
+        );
+
+    border-color: #a43a3d;
+
+    color: #fff;
+
+    box-shadow:
+        0 0 14px rgba(133,41,44,0.25);
+}
+
+
+/* =========================================================
+   CONTEÚDO
+   ========================================================= */
+
+.conteudo {
+    width: min(1150px, calc(100% - 30px));
+
+    margin: 35px auto;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(29,31,30,0.95),
+            rgba(17,18,17,0.98)
+        );
+
+    border: 1px solid #353836;
+
+    border-radius: 3px;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 12px 30px var(--sombra),
+        inset 0 1px rgba(255,255,255,0.025);
+}
+
+.card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 28px;
+
+    right: 28px;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(162,139,99,0.45),
+            transparent
+        );
+}
+
+.card-largo {
+    width: 100%;
+}
+
+
+/* =========================================================
+   BANNER
+   ========================================================= */
+
+.card-banner {
+    position: relative;
+
+    min-height: 245px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    background-size: cover;
+
+    background-position: center;
+
+    border: 1px solid #414440;
+
+    border-radius: 3px;
+
+    padding: 28px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 14px 38px rgba(0,0,0,0.85);
+}
+
+.card-banner::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,0.72),
+            rgba(0,0,0,0.20),
+            rgba(0,0,0,0.72)
+        );
+
+    pointer-events: none;
+}
+
+.card-banner > * {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.grid-cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
+
+.card h3,
+.card-subtitulo {
+    color: #eeeeE8;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 1.12rem;
+
+    font-weight: 400;
+
+    border-bottom: 1px solid #383b38;
+
+    padding-bottom: 11px;
+
+    margin-bottom: 18px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+.boas-vindas {
+    margin-bottom: 25px;
+}
+
+.boas-vindas h2 {
+    color: #eeeeE8;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 2rem;
+
+    font-weight: 400;
+
+    letter-spacing: 1px;
+
+    text-shadow:
+        2px 2px 5px #000;
+}
+
+
+/* =========================================================
+   VALORES
+   ========================================================= */
+
+.card-titulo {
+    display: block;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 0.76rem;
+
+    color: #aaa9a2;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+}
+
+.card-valor {
+    display: block;
+
+    margin-top: 7px;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 2.5rem;
+
+    font-weight: 400;
+
+    letter-spacing: 1px;
+
+    color: #d0bd93;
+
+    text-shadow:
+        0 0 15px rgba(208,189,147,0.10);
+}
+
+
+/* =========================================================
+   TEXTO
+   ========================================================= */
+
+.card p,
+.card span {
+    color: #d7d5cf;
+}
+
+.card strong,
+.item-compacto strong {
+    color: #eeeeE8 !important;
+}
+
+.item-compacto-info {
+    color: #d7d5cf;
+}
+
+.data {
+    color: #aaa9a2;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   HORAS — DESTAQUE
+   ========================================================= */
+
+.relogio {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 105px;
+
+    padding: 8px 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #191b1a,
+            #101110
+        );
+
+    border: 1px solid #625238;
+
+    border-radius: 2px;
+
+    color: #d4bd8d;
+
+    font-family:
+        "Barlow Condensed",
+        "Courier New",
+        monospace;
+
+    font-size: 1.25rem;
+
+    font-weight: 500;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 10px rgba(212,189,141,0.18);
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.5),
+        inset 0 0 12px rgba(0,0,0,0.45);
+}
+
+
+/* =========================================================
+   LINHA TÍTULO
+   ========================================================= */
+
+.linha-titulo {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 8px;
+}
+
+
+/* =========================================================
+   TAG
+   ========================================================= */
+
+.tag-vermelha {
+    display: inline-block;
+
+    background:
+        linear-gradient(
+            135deg,
+            #942d30,
+            #661b1e
+        );
+
+    color: #fff;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 0.7rem;
+
+    padding: 4px 10px;
+
+    border-radius: 2px;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    box-shadow:
+        0 3px 8px rgba(0,0,0,0.45);
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.form-tarefa {
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+.input-tarefa {
+    background:
+        #1c1e1d;
+
+    border: 1px solid #373a38;
+
+    border-radius: 3px;
+
+    color: #e8e6df;
+
+    padding: 11px 13px;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 0.98rem;
+
+    flex: 1;
+
+    outline: none;
+
+    transition: 0.2s ease;
+
+    box-shadow:
+        inset 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.input-tarefa:hover {
+    border-color: #555851;
+}
+
+.input-tarefa:focus {
+    border-color: #88724c;
+
+    box-shadow:
+        0 0 0 1px rgba(162,139,99,0.13),
+        inset 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.input-tarefa::placeholder {
+    color: #888880;
+
+    font-style: italic;
+}
+
+textarea.input-tarefa {
+    resize: vertical;
+}
+
+select.input-tarefa {
+    cursor: pointer;
+}
+
+select.input-tarefa option {
+    background: #171918;
+
+    color: #e8e6df;
+}
+
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.btn-guardar {
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #24251f,
+            #161714
+        );
+
+    border: 1px solid #8a744d;
+
+    color: #d3bd8d;
+
+    padding: 10px 20px;
+
+    border-radius: 2px;
+
+    cursor: pointer;
+
+    font-family:
+        "Barlow Condensed",
+        Arial,
+        sans-serif;
+
+    font-size: 0.78rem;
+
+    font-weight: 500;
+
+    letter-spacing: 1.7px;
+
+    text-transform: uppercase;
+
+    transition: all 0.25s ease;
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,0.5);
+}
+
+.btn-guardar:hover {
+    background:
+        linear-gradient(
+            180deg,
+            #c9b27e,
+            #957848
+        );
+
+    color: #090908;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   LISTAS
+   ========================================================= */
+
+.item-compacto {
+    background:
+        linear-gradient(
+            90deg,
+            #191b19,
+            #131514
+        );
+
+    border: 1px solid #343735;
+
+    padding: 10px 13px;
+
+    border-radius: 3px;
+
+    margin-bottom: 8px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    transition: 0.2s ease;
+}
+
+.item-compacto:hover {
+    border-color: #555951;
+
+    background: #1d1f1d;
+
+    transform: translateX(2px);
+}
+
+
+/* =========================================================
+   REMOVER
+   ========================================================= */
+
+button[onclick*="remover"] {
+    transition: 0.2s ease;
+}
+
+button[onclick*="remover"]:hover {
+    color: #db5052 !important;
+
+    transform: scale(1.15);
+}
+
+
+/* =========================================================
+   SELEÇÃO
+   ========================================================= */
+
+::selection {
+    background: var(--vermelho);
+
+    color: #fff;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #080909;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3d403c;
+
+    border: 2px solid #080909;
+
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8c744b;
+}
+
+
+/* =========================================================
+   ANIMAÇÃO
+   ========================================================= */
+
+@keyframes aparecer {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+.aba {
+    animation:
+        aparecer 0.3s ease;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .header-principal {
+        min-height: 210px;
+
+        padding: 40px 15px;
+    }
+
+    .header-principal h1 {
+        font-size: 2.5rem;
+
+        letter-spacing: 6px;
+    }
+
+    .sub-peaky {
+        font-size: 0.65rem;
+
+        letter-spacing: 3px;
+    }
+
+    .conteudo {
+        width: calc(100% - 20px);
+
+        margin: 20px auto;
+    }
+
+    .card,
+    .card-banner {
+        padding: 18px;
+    }
+
+    .linha-titulo {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .form-tarefa {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .btn-guardar {
+        width: 100%;
+    }
+
+    .item-compacto {
+        align-items: flex-start;
+    }
+}
+```
+
+/* =========================================================
+   SAINTS — TOQUE FINAL PEAKY BLINDERS / GARRISON
+   MANUSCRITO + ÉPOCA
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   TIPOGRAFIA GERAL
+   --------------------------------------------------------- */
+
+body {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    color: #ded8cc;
+}
+
+
+/* ---------------------------------------------------------
+   TÍTULO PRINCIPAL
+   Escrita antiga / pena
+   --------------------------------------------------------- */
+
+.header-principal h1 {
+    font-family:
+        "Pinyon Script",
+        "IM Fell English",
+        cursive;
+
+    font-size: clamp(4rem, 8vw, 6.5rem);
+
+    font-weight: 400;
+
+    letter-spacing: 2px;
+
+    text-transform: none;
+
+    color: #e7dfcf;
+
+    text-shadow:
+        2px 3px 0 #080706,
+        0 5px 18px rgba(0,0,0,0.95);
+
+    transform: rotate(-1deg);
+}
+
+
+/* ---------------------------------------------------------
+   SUBTÍTULO
+   --------------------------------------------------------- */
+
+.sub-peaky {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    font-size: 0.9rem;
+
+    font-style: italic;
+
+    letter-spacing: 3px;
+
+    color: #b7a889;
+
+    text-transform: none;
+}
+
+
+/* ---------------------------------------------------------
+   MENU
+   --------------------------------------------------------- */
+
+.menu-navegacao li {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    font-size: 0.88rem;
+
+    letter-spacing: 0.8px;
+
+    text-transform: none;
+
+    color: #c5bbaa;
+
+    background:
+        linear-gradient(
+            180deg,
+            #1b1b19,
+            #121312
+        );
+
+    border-color: #48443b;
+}
+
+.menu-navegacao li:hover {
+    color: #eee7da;
+
+    border-color: #8b7958;
+
+    background:
+        linear-gradient(
+            180deg,
+            #25231f,
+            #171815
+        );
+}
+
+.menu-navegacao li.ativo {
+    background:
+        linear-gradient(
+            135deg,
+            #75282b,
+            #4b171a
+        );
+
+    border-color: #9a4a4b;
+
+    color: #fff4e8;
+}
+
+
+/* ---------------------------------------------------------
+   TÍTULOS DOS CARDS
+   --------------------------------------------------------- */
+
+.card h3,
+.card-subtitulo {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    font-size: 1.25rem;
+
+    font-weight: 400;
+
+    letter-spacing: 1px;
+
+    text-transform: none;
+
+    color: #e8e0d2;
+
+    border-bottom-color: #51483b;
+}
+
+
+/* ---------------------------------------------------------
+   BOAS-VINDAS
+   --------------------------------------------------------- */
+
+.boas-vindas h2 {
+    font-family:
+        "Pinyon Script",
+        "IM Fell English",
+        cursive;
+
+    font-size: 3rem;
+
+    font-weight: 400;
+
+    letter-spacing: 1px;
+
+    color: #e7decd;
+
+    text-shadow:
+        2px 2px 5px #000;
+}
+
+
+/* ---------------------------------------------------------
+   TEXTO DOS CARDS
+   --------------------------------------------------------- */
+
+.card p,
+.card span,
+.item-compacto-info {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    color: #d8d0c2;
+}
+
+.card strong,
+.item-compacto strong {
+    color: #eee6d7 !important;
+}
+
+
+/* ---------------------------------------------------------
+   PEQUENOS TÍTULOS
+   --------------------------------------------------------- */
+
+.card-titulo {
+    font-family:
+        "Libre Baskerville",
+        Georgia,
+        serif;
+
+    font-size: 0.68rem;
+
+    letter-spacing: 1.8px;
+
+    color: #aa9a7e;
+
+    text-transform: uppercase;
+}
+
+
+/* ---------------------------------------------------------
+   VALORES
+   --------------------------------------------------------- */
+
+.card-valor {
+    font-family:
+        "Libre Baskerville",
+        Georgia,
+        serif;
+
+    font-size: 2.35rem;
+
+    font-weight: 400;
+
+    letter-spacing: 1px;
+
+    color: #c6ae7b;
+
+    text-shadow:
+        0 0 14px rgba(198,174,123,0.14);
+}
+
+
+/* ---------------------------------------------------------
+   HORAS
+   MAIS ELEGANTE / RELÓGIO DE ÉPOCA
+   --------------------------------------------------------- */
+
+.relogio {
+    min-width: 125px;
+
+    padding: 9px 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #211f1a,
+            #111210
+        );
+
+    border: 1px solid #786746;
+
+    border-radius: 1px;
+
+    color: #d8c28e;
+
+    font-family:
+        "Libre Baskerville",
+        Georgia,
+        serif;
+
+    font-size: 1.2rem;
+
+    font-weight: 400;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 8px rgba(216,194,142,0.18);
+
+    box-shadow:
+        0 5px 16px rgba(0,0,0,0.6),
+        inset 0 1px rgba(255,255,255,0.04);
+
+    position: relative;
+}
+
+
+/* Pequeno detalhe decorativo no relógio */
+
+.relogio::before {
+    content: "⌚";
+
+    font-size: 0.75rem;
+
+    margin-right: 7px;
+
+    opacity: 0.65;
+}
+
+
+/* ---------------------------------------------------------
+   DATA
+   --------------------------------------------------------- */
+
+.data {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    font-size: 0.95rem;
+
+    font-style: italic;
+
+    color: #a99d89;
+
+    letter-spacing: 0.4px;
+}
+
+
+/* ---------------------------------------------------------
+   TAG VERMELHA
+   --------------------------------------------------------- */
+
+.tag-vermelha {
+    font-family:
+        "Libre Baskerville",
+        Georgia,
+        serif;
+
+    font-size: 0.62rem;
+
+    letter-spacing: 1.2px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #85292c,
+            #4d1719
+        );
+
+    border: 1px solid #9b3b3e;
+
+    color: #f5e9dc;
+}
+
+
+/* ---------------------------------------------------------
+   INPUTS
+   --------------------------------------------------------- */
+
+.input-tarefa {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    font-size: 1rem;
+
+    color: #e5ddcf;
+
+    background:
+        linear-gradient(
+            180deg,
+            #20211f,
+            #151716
+        );
+
+    border-color: #46473f;
+}
+
+.input-tarefa::placeholder {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    font-style: italic;
+
+    color: #938a7b;
+}
+
+.input-tarefa:focus {
+    border-color: #8a7650;
+
+    box-shadow:
+        0 0 0 1px rgba(178,151,101,0.16),
+        inset 0 2px 8px rgba(0,0,0,0.35);
+}
+
+
+/* ---------------------------------------------------------
+   BOTÕES
+   --------------------------------------------------------- */
+
+.btn-guardar {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    font-size: 0.9rem;
+
+    font-weight: 400;
+
+    letter-spacing: 0.8px;
+
+    text-transform: none;
+
+    color: #d8c292;
+
+    background:
+        linear-gradient(
+            180deg,
+            #29271f,
+            #161714
+        );
+
+    border-color: #88744f;
+}
+
+.btn-guardar:hover {
+    background:
+        linear-gradient(
+            180deg,
+            #b49a69,
+            #80683f
+        );
+
+    color: #11100d;
+
+    border-color: #c4aa77;
+}
+
+
+/* ---------------------------------------------------------
+   LISTAS
+   --------------------------------------------------------- */
+
+.item-compacto {
+    font-family:
+        "IM Fell English",
+        Georgia,
+        serif;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1b1c1a,
+            #141615
+        );
+
+    border-color: #3e403b;
+}
+
+.item-compacto:hover {
+    background: #20211e;
+
+    border-color: #756447;
+}
+
+.item-compacto-info {
+    font-size: 1rem;
+}
+
+
+/* ---------------------------------------------------------
+   LINHA DOS TÍTULOS
+   --------------------------------------------------------- */
+
+.linha-titulo {
+    border-bottom: 0;
+}
+
+
+/* ---------------------------------------------------------
+   CARDS — DETALHE DE PAPEL / MOLDURA
+   --------------------------------------------------------- */
+
+.card {
+    border-color: #46453e;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(32,32,29,0.97),
+            rgba(18,19,18,0.99)
+        );
+
+    box-shadow:
+        0 14px 32px rgba(0,0,0,0.82),
+        inset 0 1px rgba(255,255,255,0.035);
+}
+
+.card::before {
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(176,148,96,0.55),
+            transparent
+        );
+}
+
+
+/* ---------------------------------------------------------
+   BANNER
+   --------------------------------------------------------- */
+
+.card-banner::after {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,0.78),
+            rgba(0,0,0,0.18),
+            rgba(0,0,0,0.78)
+        );
+}
+
+
+/* ---------------------------------------------------------
+   SCROLLBAR
+   --------------------------------------------------------- */
+
+::-webkit-scrollbar-thumb {
+    background: #464238;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8a754f;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+    .header-principal h1 {
+        font-size: 4rem;
+
+        letter-spacing: 1px;
+    }
+
+    .boas-vindas h2 {
+        font-size: 2.5rem;
+    }
+
+    .relogio {
+        min-width: 115px;
+
+        font-size: 1.05rem;
+    }
+}
