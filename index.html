@@ -3,226 +3,608 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel SAINTS - Peaky Blinders</title>
-    <!-- Firebase SDKs (Realtime Database) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-    <style>
-        body { background-color: #0c0a08; color: #e6dfcc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
-        h1, h2, h3 { color: #c5a059; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .card { background: #14100c; border: 1px solid #36281e; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
-        input, select, textarea { background: #1c1611; border: 1px solid #36281e; color: #e6dfcc; padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
-        button.btn-acao { background: #c5a059; color: #0c0a08; border: none; padding: 10px 15px; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        button.btn-acao:hover { background: #d4af37; }
-    </style>
+    <title>SAINTS - Peaky Blinders</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>By Order of the Peaky Blinders - SAINTS</h1>
 
-        <!-- TABELA DE ARMAS -->
-        <div class="card">
-            <h2>Tabela de Armas</h2>
-            <form onsubmit="adicionarTabelaArma(event)">
-                <input type="text" id="tabela-arma-nome" placeholder="Nome da Arma" required>
-                <input type="number" step="0.01" id="tabela-arma-preco" placeholder="Preço (€)" required>
-                <button type="submit" class="btn-acao">Adicionar Arma</button>
-            </form>
-            <ul id="lista-tabela-armas" style="list-style:none; padding:0; margin-top:15px;"></ul>
-        </div>
+    <!-- Firebase Limpo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 
-        <!-- CRAFTS SAINTS -->
-        <div class="card">
-            <h2>Crafts Saints</h2>
-            <form onsubmit="adicionarCraftSaints(event)">
-                <input type="text" id="craftsaints-nome" placeholder="Nome do Craft" required>
-                <textarea id="craftsaints-ingredientes" placeholder="Ingredientes necessários" rows="3" required></textarea>
-                <input type="text" id="craftsaints-produz" placeholder="O que produz (ex: 2x Item)" required>
-                <button type="submit" class="btn-acao">Registar Craft</button>
-            </form>
-            <div id="lista-craftsaints" style="margin-top:15px;"></div>
-        </div>
-
-        <!-- GUARDA-ROUPA -->
-        <div class="card">
-            <h2>Guarda-Roupa</h2>
-            <form onsubmit="adicionarRoupa(event)">
-                <input type="text" id="roupa-nome" placeholder="Nome da Roupa / Conjunto" required>
-                <input type="url" id="roupa-img" placeholder="Link da Imagem (opcional)">
-                <button type="submit" class="btn-acao">Adicionar Roupa</button>
-            </form>
-            <div id="lista-roupas" style="margin-top:15px;"></div>
-        </div>
-
-        <!-- RECEITAS -->
-        <div class="card">
-            <h2>Receitas</h2>
-            <form onsubmit="adicionarReceita(event)">
-                <input type="text" id="receita-nome" placeholder="Nome da Receita" required>
-                <textarea id="receita-ingredientes" placeholder="Ingredientes e passos" rows="3" required></textarea>
-                <button type="submit" class="btn-acao">Adicionar Receita</button>
-            </form>
-            <div id="lista-receitas" style="margin-top:15px;"></div>
-        </div>
-
-        <!-- PEDIDOS DE CLIENTES -->
-        <div class="card">
-            <h2>Pedidos de Clientes (<span id="contador-pedidos-clientes">0</span>)</h2>
-            <form onsubmit="guardarPedidoCompleto(event)">
-                <input type="text" id="cli-nome" placeholder="Nome do Cliente" required>
-                <div style="display:flex; gap:10px;">
-                    <select id="cli-select-produto" style="flex:2;"></select>
-                    <input type="number" id="cli-qtd" value="1" min="1" style="flex:1;" placeholder="Qtd">
-                    <button type="button" onclick="adicionarItemAoCarrinho()" class="btn-acao" style="flex:1;">+ Item</button>
-                </div>
-                <div id="carrinho-itens" style="margin:10px 0;"></div>
-                <label style="font-size:0.85rem; color:#b8a894;">Valor Total (€):</label>
-                <input type="number" step="0.01" id="cli-total-manual" readonly required>
-                <button type="submit" class="btn-acao" style="margin-top:10px;">Registar Pedido Completo</button>
-            </form>
-            <div id="lista-pedidos-pendentes" style="margin-top:15px;"></div>
-        </div>
-
-        <!-- ENCOMENDAS -->
-        <div class="card">
-            <h2>Encomendas Feitas (<span id="contador-encomendas">0</span>)</h2>
-            <form onsubmit="adicionarEncomendaManual(event)">
-                <h3>Encomenda Geral</h3>
-                <input type="text" id="enc-man-pessoa" placeholder="Responsável" required>
-                <input type="text" id="enc-man-empresa" placeholder="Empresa / Fornecedor" required>
-                <input type="text" id="enc-man-item" placeholder="Item / Pedido" required>
-                <input type="number" step="0.01" id="enc-man-gasto" placeholder="Gasto Total (€)" required>
-                <button type="submit" class="btn-acao">Registar Encomenda Geral</button>
-            </form>
-            <hr style="border-color:#36281e; margin:20px 0;">
-            <form onsubmit="adicionarEncomendaArmas(event)">
-                <h3>Encomenda de Armamento</h3>
-                <input type="text" id="enc-arm-pessoa" placeholder="Responsável" required>
-                <input type="text" id="enc-arm-empresa" placeholder="Empresa / Fornecedor" required>
-                <select id="enc-select-arma" required></select>
-                <input type="number" id="enc-arm-qtd" value="1" min="1" placeholder="Quantidade" required>
-                <button type="submit" class="btn-acao">Registar Encomenda de Armas</button>
-            </form>
-            <div id="lista-encomendas" style="margin-top:15px;"></div>
-        </div>
-
-        <!-- SPOTS -->
-        <div class="card">
-            <h2>Gestão de Spots</h2>
-            <form onsubmit="adicionarSpot('farm', event)">
-                <h3>Adicionar Spot de Farm</h3>
-                <input type="text" id="spot-farm-nome" placeholder="Localização / Nome" required>
-                <input type="text" id="spot-farm-info" placeholder="Informação / Descrição" required>
-                <input type="url" id="spot-farm-img" placeholder="Link da Imagem (opcional)">
-                <button type="submit" class="btn-acao">Adicionar Spot de Farm</button>
-            </form>
-            <div id="lista-spots-farm" style="margin-top:15px;"></div>
-        </div>
-    </div>
-
-    <script>
-        // CONFIGURAÇÃO DO FIREBASE (Realtime Database)
         const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_AUTH_DOMAIN",
-            databaseURL: "https://saint-2e330-default-rtdb.firebaseio.com",
-            projectId: "saint-2e330",
-            storageBucket: "SEU_STORAGE_BUCKET",
-            messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-            appId: "SEU_APP_ID"
+            apiKey: "AIzaSyBagsJHUH_lpTxf9JwVzfnsN7tI9t3gde8",
+            authDomain: "saints-bf9c6.firebaseapp.com",
+            projectId: "saints-bf9c6",
+            storageBucket: "saints-bf9c6.firebasestorage.app",
+            messagingSenderId: "1045547655529",
+            appId: "1:1045547655529:web:639161bb10087669935df8"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        console.log("Firebase inicializado com sucesso!");
+    </script>
 
+    <!-- BANNER DE CABEÇALHO -->
+    <header class="header-principal">
+        <h1>SAINTS</h1>
+        <p class="sub-peaky">"No final... todos morremos."</p>
+    </header>
+
+    <!-- MENU DE NAVEGAÇÃO -->
+    <nav class="menu-navegacao">
+        <ul>
+            <li id="btn-inicio" class="ativo" onclick="mudarAba('inicio')">👍 Início</li>
+            <li id="btn-reunioes" onclick="mudarAba('reunioes')">🗣️ Reuniões</li>
+            <li id="btn-tarefas" onclick="mudarAba('tarefas')">📋 Tarefas</li>
+            <li id="btn-produtos" onclick="mudarAba('produtos')">🏷️ Preços de Produtos</li>
+            <li id="btn-armas" onclick="mudarAba('armas')">⚔️ Preços de Armas</li>
+            <li id="btn-clientes" onclick="mudarAba('clientes')">👥 Pedidos de Clientes</li>
+            <li id="btn-encomendas" onclick="mudarAba('encomendas')">📦 Encomendas Feitas</li>
+            <li id="btn-vendas" onclick="mudarAba('vendas')">📍 Spots de Vendas</li>
+            <li id="btn-plantas" onclick="mudarAba('plantas')">🌿 Spot de Plantas</li>
+            <li id="btn-frutas" onclick="mudarAba('frutas')">🍎 Spot de Frutas</li>
+            <li id="btn-craft" onclick="mudarAba('craft')">🔨 Spots de Craft</li>
+            <li id="btn-craftsaints" onclick="mudarAba('craftsaints')">⚜️ Crafts SAINTS</li>
+            <li id="btn-roupa" onclick="mudarAba('roupa')">👕 Roupa</li>
+            <li id="btn-receitas" onclick="mudarAba('receitas')">📜 Receitas</li>
+        </ul>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="conteudo">
+        
+        <!-- ABA INÍCIO -->
+        <div id="aba-inicio" class="aba">
+            <section class="boas-vindas card-banner">
+                <span class="tag-vermelha">BIRMINGHAM 1919</span>
+                <div class="linha-titulo">
+                    <h2>Visão Geral</h2>
+                    <span id="relogio" class="relogio">00:00:00</span>
+                </div>
+                <p id="data-atual" class="data">Carregando data...</p>
+            </section>
+
+            <section class="grid-cards">
+                <div class="card">
+                    <span class="card-titulo">REUNIÕES REGISTADAS</span>
+                    <span id="contador-reunioes" class="card-valor">0</span>
+                </div>
+                <div class="card">
+                    <span class="card-titulo">TAREFAS PENDENTES</span>
+                    <span id="contador-tarefas" class="card-valor">0</span>
+                </div>
+                <div class="card">
+                    <span class="card-titulo">PEDIDOS DE CLIENTES PENDENTES</span>
+                    <span id="contador-pedidos-clientes" class="card-valor">0</span>
+                </div>
+                <div class="card">
+                    <span class="card-titulo">ENCOMENDAS FEITAS</span>
+                    <span id="contador-encomendas" class="card-valor">0</span>
+                </div>
+            </section>
+
+            <section class="card card-largo">
+                <h3>📋 Próximas Tarefas</h3>
+                <div id="resumo-tarefas">
+                    <p style="color: #8c7b6c;">Tudo concluído. 🎉</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA REUNIÕES -->
+        <div id="aba-reunioes" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">O GABINETE</span>
+                <h2>Gestão de Reuniões</h2>
+            </section>
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Registar Tópico / Reunião</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch;" onsubmit="adicionarReuniao(event)">
+                    <input type="text" id="reuniao-titulo" placeholder="Título / Assunto da Reunião" class="input-tarefa" required>
+                    <textarea id="reuniao-notas" placeholder="Notas, decisões ou tópicos discutidos..." class="input-tarefa" style="margin-top: 8px; height: 70px;" required></textarea>
+                    <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar Reunião</button>
+                </form>
+            </section>
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo">Lista de Reuniões Registadas</h3>
+                <div id="lista-reunioes" style="margin-top: 15px;"></div>
+            </section>
+        </div>
+
+        <!-- ABA TAREFAS -->
+        <div id="aba-tarefas" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">ORGANIZAÇÃO</span>
+                <h2>Gestão de Tarefas</h2>
+            </section>
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Adicionar Tarefa</h3>
+                <form class="form-tarefa" onsubmit="adicionarTarefa(event)">
+                    <input type="text" id="input-nova-tarefa" placeholder="Descrição da tarefa" class="input-tarefa" required>
+                    <button type="submit" class="btn-guardar">Adicionar</button>
+                </form>
+            </section>
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Lista de Tarefas</h3>
+                <ul id="lista-tarefas" style="list-style: none; padding: 0; margin-top: 15px;"></ul>
+            </section>
+        </div>
+
+        <!-- ABA PREÇOS DE PRODUTOS -->
+        <div id="aba-produtos" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">MERCADO</span>
+                <h2>Preços de Produtos</h2>
+            </section>
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Adicionar / Editar Preço de Produto</h3>
+                <form class="form-tarefa" onsubmit="adicionarProduto(event)">
+                    <input type="text" id="prod-nome" placeholder="Nome do Produto" class="input-tarefa" required>
+                    <input type="number" step="0.01" id="prod-preco" placeholder="Preço (€)" class="input-tarefa" style="max-width: 130px;" required>
+                    <button type="submit" class="btn-guardar">Salvar Produto</button>
+                </form>
+            </section>
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Tabela de Preços de Produtos</h3>
+                <ul id="lista-produtos" style="list-style: none; padding: 0; margin-top: 15px;"></ul>
+            </section>
+        </div>
+
+        <!-- ABA PREÇOS DE ARMAS -->
+        <div id="aba-armas" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">ARMAMENTO</span>
+                <h2>Valores de Armas</h2>
+            </section>
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Adicionar / Editar Preço de Arma</h3>
+                <form class="form-tarefa" onsubmit="adicionarTabelaArma(event)">
+                    <input type="text" id="tabela-arma-nome" placeholder="Nome da Arma / Munição" class="input-tarefa" required>
+                    <input type="number" step="0.01" id="tabela-arma-preco" placeholder="Preço (€)" class="input-tarefa" style="max-width: 130px;" required>
+                    <button type="submit" class="btn-guardar">Salvar Arma</button>
+                </form>
+            </section>
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Tabela de Preços de Armas</h3>
+                <ul id="lista-tabela-armas" style="list-style: none; padding: 0; margin-top: 15px;"></ul>
+            </section>
+        </div>
+
+        <!-- ABA PEDIDOS DE CLIENTES -->
+        <div id="aba-clientes" class="aba" style="display: none;">
+            <section class="card card-largo">
+                <h3 class="card-subtitulo" style="font-size: 1.25rem; margin-bottom: 20px;">Registar Novo Pedido de Cliente (Produtos)</h3>
+                <form onsubmit="guardarPedidoCompleto(event)">
+                    <input type="text" id="cli-nome" placeholder="Nome do Cliente" class="input-tarefa" style="width: 100%; box-sizing: border-box; margin-bottom: 15px;" required>
+
+                    <div style="background: #140f0c; border: 1px solid #2e2319; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+                        <label style="color: #c5a059; font-size: 0.9rem; display: block; margin-bottom: 8px;">🛒 Adicionar Produto da Tabela:</label>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                            <select id="cli-select-produto" class="input-tarefa" style="flex: 3; min-width: 200px;">
+                                <option value="">Selecionar produto...</option>
+                            </select>
+                            <input type="number" min="1" id="cli-qtd" value="1" class="input-tarefa" style="width: 70px; text-align: center;">
+                            <button type="button" onclick="adicionarItemAoCarrinho()" class="btn-guardar" style="padding: 10px 18px; background: #261f18; border: 1px solid #c5a059; color: #c5a059;">Adicionar</button>
+                        </div>
+                        <div id="carrinho-itens" style="margin-top: 12px;"></div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="color: #b8a894; font-size: 0.9rem; display: block; margin-bottom: 5px;">Valor Total (€):</label>
+                        <input type="number" id="cli-total-manual" value="0.00" step="0.01" class="input-tarefa" style="width: 140px; text-align: left;" readonly>
+                    </div>
+
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; font-size: 1rem; text-align: center;">Guardar Pedido de Produtos</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo" style="font-size: 1.2rem; margin-bottom: 15px;">Lista de Pedidos Pendentes</h3>
+                <div id="lista-pedidos-pendentes">
+                    <p style="color: #7a6c5d;">Nenhum pedido de cliente registado.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA ENCOMENDAS FEITAS -->
+        <div id="aba-encomendas" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">LOGÍSTICA</span>
+                <h2>Encomendas Feitas</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Registar Encomenda Geral (Manual)</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 10px;" onsubmit="adicionarEncomendaManual(event)">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" id="enc-man-pessoa" placeholder="Nome da Pessoa" class="input-tarefa" style="flex: 1;" required>
+                        <input type="text" id="enc-man-empresa" placeholder="Nome da Empresa" class="input-tarefa" style="flex: 1;" required>
+                    </div>
+                    <input type="text" id="enc-man-item" placeholder="O que foi pedido?" class="input-tarefa" required>
+                    <input type="number" step="0.01" id="enc-man-gasto" placeholder="Quanto foi gasto (€)" class="input-tarefa" required>
+                    <button type="submit" class="btn-guardar">Registar Encomenda Manual</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo">Encomendar Armas (Tabela de Armas)</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 10px;" onsubmit="adicionarEncomendaArmas(event)">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" id="enc-arm-pessoa" placeholder="Nome da Pessoa" class="input-tarefa" style="flex: 1;" required>
+                        <input type="text" id="enc-arm-empresa" placeholder="Nome da Empresa" class="input-tarefa" style="flex: 1;" required>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <select id="enc-select-arma" class="input-tarefa" style="flex: 2;" required>
+                            <option value="">Selecionar arma da tabela...</option>
+                        </select>
+                        <input type="number" min="1" id="enc-arm-qtd" placeholder="Qtd" class="input-tarefa" value="1" style="flex: 1; max-width: 100px;" required>
+                    </div>
+                    <button type="submit" class="btn-guardar">Gerar Fatura / Encomendar Arma</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo">Histórico de Encomendas</h3>
+                <div id="lista-encomendas" style="margin-top: 15px;"></div>
+            </section>
+        </div>
+
+        <!-- ABA SPOTS DE VENDAS -->
+        <div id="aba-vendas" class="aba" style="display: none;">
+            <section class="boas-vindas" style="margin-bottom: 15px;">
+                <span class="tag-vermelha">LOCAIS</span>
+                <h2>Spots de Vendas</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Adicionar Local de Venda</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 12px;" onsubmit="adicionarSpot('vendas', event)">
+                    <input type="text" id="spot-vendas-nome" placeholder="Nome do local (ex: Annesburg)" class="input-tarefa" required>
+                    <input type="text" id="spot-vendas-info" placeholder="Oq se vende (ex: Moshinne)" class="input-tarefa" required>
+                    <input type="url" id="spot-vendas-img" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa">
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; margin-top: 5px;">Guardar Spot</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Lista de Spots de Vendas</h3>
+                <div id="lista-spots-vendas">
+                    <p style="color: #7a6c5d;">Nenhum spot registado.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA SPOT DE PLANTAS -->
+        <div id="aba-plantas" class="aba" style="display: none;">
+            <section class="boas-vindas" style="margin-bottom: 15px;">
+                <span class="tag-vermelha">RECURSOS</span>
+                <h2>Spot de Plantas</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Adicionar Local de Plantas</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 12px;" onsubmit="adicionarSpot('plantas', event)">
+                    <input type="text" id="spot-plantas-nome" placeholder="Nome do local (ex: Emerald Ranch)" class="input-tarefa" required>
+                    <input type="text" id="spot-plantas-info" placeholder="Oq se apanha (ex: Tabaco Selvagem, Cogumelos)" class="input-tarefa" required>
+                    <input type="url" id="spot-plantas-img" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa">
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; margin-top: 5px;">Guardar Spot</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Lista de Spots de Plantas</h3>
+                <div id="lista-spots-plantas">
+                    <p style="color: #7a6c5d;">Nenhum spot registado.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA SPOT DE FRUTAS -->
+        <div id="aba-frutas" class="aba" style="display: none;">
+            <section class="boas-vindas" style="margin-bottom: 15px;">
+                <span class="tag-vermelha">COLHEITAS</span>
+                <h2>Spot de Frutas</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Adicionar Local de Frutas</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 12px;" onsubmit="adicionarSpot('frutas', event)">
+                    <input type="text" id="spot-frutas-nome" placeholder="Nome do local (ex: Pomar de Rhodes)" class="input-tarefa" required>
+                    <input type="text" id="spot-frutas-info" placeholder="Oq se apanha (ex: Maçãs, Pêssegos, Bagas)" class="input-tarefa" required>
+                    <input type="url" id="spot-frutas-img" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa">
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; margin-top: 5px;">Guardar Spot</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Lista de Spots de Frutas</h3>
+                <div id="lista-spots-frutas">
+                    <p style="color: #7a6c5d;">Nenhum spot registado.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA SPOTS DE CRAFT -->
+        <div id="aba-craft" class="aba" style="display: none;">
+            <section class="boas-vindas" style="margin-bottom: 15px;">
+                <span class="tag-vermelha">PRODUÇÃO</span>
+                <h2>Spots de Craft</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Adicionar Local de Craft</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 12px;" onsubmit="adicionarSpot('craft', event)">
+                    <input type="text" id="spot-craft-nome" placeholder="Nome do local (ex: Esconderijo de Blackwater)" class="input-tarefa" required>
+                    <input type="text" id="spot-craft-info" placeholder="Oq se produz / Bancada (ex: Armas, Munição, Remédios)" class="input-tarefa" required>
+                    <input type="url" id="spot-craft-img" placeholder="Link da Imagem / Foto do Spot (opcional)" class="input-tarefa">
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; margin-top: 5px;">Guardar Spot</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo" style="font-size: 1.15rem; margin-bottom: 15px;">Lista de Spots de Craft</h3>
+                <div id="lista-spots-craft">
+                    <p style="color: #7a6c5d;">Nenhum spot registado.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA CRAFTS SAINTS -->
+        <div id="aba-craftsaints" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">EXCLUSIVO</span>
+                <h2>Crafts SAINTS</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Adicionar Novo Craft SAINTS</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 12px;" onsubmit="adicionarCraftSaints(event)">
+                    <input type="text" id="craftsaints-nome" placeholder="Nome do Item (ex: Empunhadura Clandestina)" class="input-tarefa" required>
+                    <textarea id="craftsaints-ingredientes" placeholder="Ingredientes necessários..." class="input-tarefa" style="height: 70px; resize: vertical;" required></textarea>
+                    <input type="text" id="craftsaints-produz" placeholder="O que produz (ex: = 2 Empunhaduras)" class="input-tarefa" required>
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; margin-top: 5px;">Guardar Craft SAINTS</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo">Lista de Crafts SAINTS</h3>
+                <div id="lista-craftsaints" style="margin-top: 15px;">
+                    <p style="color: #7a6c5d;">Nenhum craft registado.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA ROUPA / GUARDA-ROUPA -->
+        <div id="aba-roupa" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">VESTUÁRIO</span>
+                <h2>Roupa / Guarda-Roupa</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Adicionar Conjunto de Roupa</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 12px;" onsubmit="adicionarRoupa(event)">
+                    <input type="text" id="roupa-nome" placeholder="Nome do Conjunto / Peça" class="input-tarefa" required>
+                    <input type="url" id="roupa-img" placeholder="Link da Imagem / Foto do Conjunto" class="input-tarefa">
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; margin-top: 5px;">Guardar Roupa</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo">Lista de Roupas</h3>
+                <div id="lista-roupas" style="margin-top: 15px;">
+                    <p style="color: #7a6c5d;">Nenhuma roupa registada.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABA RECEITAS -->
+        <div id="aba-receitas" class="aba" style="display: none;">
+            <section class="boas-vindas">
+                <span class="tag-vermelha">MANUAIS</span>
+                <h2>Receitas</h2>
+            </section>
+
+            <section class="card card-largo">
+                <h3 class="card-subtitulo">Adicionar Receita</h3>
+                <form class="form-tarefa" style="flex-direction: column; align-items: stretch; gap: 12px;" onsubmit="adicionarReceita(event)">
+                    <input type="text" id="receita-nome" placeholder="Nome do Item / Produto" class="input-tarefa" required>
+                    <textarea id="receita-ingredientes" placeholder="Ingredientes e quantidades..." class="input-tarefa" style="height: 80px; resize: vertical;" required></textarea>
+                    <button type="submit" class="btn-guardar" style="width: 100%; padding: 12px; margin-top: 5px;">Guardar Receita</button>
+                </form>
+            </section>
+
+            <section class="card card-largo" style="margin-top: 20px;">
+                <h3 class="card-subtitulo">Receitas Guardadas</h3>
+                <div id="lista-receitas" style="margin-top: 15px;">
+                    <p style="color: #7a6c5d;">Nenhuma receita registada.</p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- SCRIPT DE INTERAÇÕES -->
+    <script>
+        let tarefas = [];
+        let produtos = [];
         let tabelaArmas = [];
-        let craftsSaints = [];
-        let roupas = [];
-        let receitas = [];
-        let carrinhoAtual = [];
+        let reunioes = [];
         let pedidosClientes = [];
         let encomendasFeitas = [];
-        let spots = { farm: [] };
+        let carrinhoAtual = [];
+        let roupas = [];
+        let receitas = [];
 
-        // --- CARREGAR DADOS ---
-        function carregarDados() {
-            db.ref("tabelaArmas").on("value", snapshot => {
-                tabelaArmas = [];
-                snapshot.forEach(childSnap => tabelaArmas.push({ id: childSnap.key, ...childSnap.val() }));
-                renderizarTabelaArmas();
-                atualizarSelectArmas();
+        let craftsSaints = [
+            {
+                nome: "Empunhadura Clandestina",
+                produz: "= 2 Empunhaduras",
+                ingredientes: "1x Barra de Ouro\n2x Barras de Ferro\n5x Minérios de Prata\n5x Minérios de Cobre\n2x Galhos"
+            },
+            {
+                nome: "Tambor",
+                produz: "= 2x Tambor's",
+                ingredientes: "2x Barras de Cobre\n2x Barras de Ouro\n5x Seivas\n15x Minérios de Prata"
+            },
+            {
+                nome: "Molas",
+                produz: "= 10 Molas",
+                ingredientes: "5x Areia\n10x Minérios de Cobre\n2x Barras de Ferro"
+            },
+            {
+                nome: "Coice De Mula",
+                produz: "= 10x Coices de Mula",
+                ingredientes: "5x Álcool\n20x Peras"
+            },
+            {
+                nome: "Resina De Opio",
+                produz: "= 10x Resinas",
+                ingredientes: "20x Papoulas\n20x Seiva"
+            }
+        ];
+
+        let spots = {
+            vendas: [],
+            plantas: [],
+            frutas: [],
+            craft: []
+        };
+
+        function mudarAba(nomeAba) {
+            const abas = ['inicio', 'reunioes', 'tarefas', 'produtos', 'armas', 'clientes', 'encomendas', 'vendas', 'plantas', 'frutas', 'craft', 'craftsaints', 'roupa', 'receitas'];
+            
+            abas.forEach(aba => {
+                const elAba = document.getElementById('aba-' + aba);
+                const elBtn = document.getElementById('btn-' + aba);
+                if (elAba) elAba.style.display = 'none';
+                if (elBtn) elBtn.classList.remove('ativo');
             });
 
-            db.ref("craftsSaints").on("value", snapshot => {
-                craftsSaints = [];
-                snapshot.forEach(childSnap => craftsSaints.push({ id: childSnap.key, ...childSnap.val() }));
-                renderizarCraftsSaints();
-            });
+            const abaAlvo = document.getElementById('aba-' + nomeAba);
+            const btnAlvo = document.getElementById('btn-' + nomeAba);
+            if (abaAlvo) abaAlvo.style.display = 'block';
+            if (btnAlvo) btnAlvo.classList.add('ativo');
 
-            db.ref("roupas").on("value", snapshot => {
-                roupas = [];
-                snapshot.forEach(childSnap => roupas.push({ id: childSnap.key, ...childSnap.val() }));
-                renderizarRoupas();
-            });
-
-            db.ref("receitas").on("value", snapshot => {
-                receitas = [];
-                snapshot.forEach(childSnap => receitas.push({ id: childSnap.key, ...childSnap.val() }));
-                renderizarReceitas();
-            });
-
-            db.ref("pedidosClientes").on("value", snapshot => {
-                pedidosClientes = [];
-                snapshot.forEach(childSnap => pedidosClientes.push({ id: childSnap.key, ...childSnap.val() }));
-                renderizarPedidosClientes();
-            });
-
-            db.ref("encomendasFeitas").on("value", snapshot => {
-                encomendasFeitas = [];
-                snapshot.forEach(childSnap => encomendasFeitas.push({ id: childSnap.key, ...childSnap.val() }));
-                renderizarEncomendas();
-            });
-
-            db.ref("spotsFarm").on("value", snapshot => {
-                spots.farm = [];
-                snapshot.forEach(childSnap => spots.farm.push({ id: childSnap.key, ...childSnap.val() }));
-                renderizarSpots('farm');
-            });
+            if(nomeAba === 'clientes') atualizarSelectProdutos();
+            if(nomeAba === 'encomendas') atualizarSelectArmas();
+            if(nomeAba === 'craftsaints') renderizarCraftsSaints();
+            if(nomeAba === 'roupa') renderizarRoupas();
+            if(nomeAba === 'receitas') renderizarReceitas();
         }
 
-        // --- TABELA DE ARMAS ---
+        function atualizarHorasEData() {
+            const agora = new Date();
+            const relogio = document.getElementById('relogio');
+            const dataAtual = document.getElementById('data-atual');
+            if (relogio) relogio.textContent = agora.toTimeString().split(' ')[0];
+            if (dataAtual) dataAtual.textContent = agora.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        atualizarHorasEData();
+        setInterval(atualizarHorasEData, 1000);
+
+        // REUNIÕES
+        function renderizarReunioes() {
+            const container = document.getElementById('lista-reunioes');
+            const contador = document.getElementById('contador-reunioes');
+            if (contador) contador.textContent = reunioes.length;
+            if (!container) return;
+            container.innerHTML = reunioes.length === 0 ? '<p style="color:#7a6c5d;">Nenhuma reunião registada.</p>' : '';
+            reunioes.forEach((r, i) => {
+                container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between;"><strong style="color:#e6dfcc;">🗣️ ${r.titulo}</strong><button onclick="removerReuniao(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button></div>
+                    <p style="color:#b8a894; margin:8px 0 0 0; font-size:0.9rem; white-space: pre-line;">${r.notas}</p>
+                </div>`;
+            });
+        }
+        function adicionarReuniao(e) {
+            e.preventDefault();
+            reunioes.push({ titulo: document.getElementById('reuniao-titulo').value.trim(), notas: document.getElementById('reuniao-notas').value.trim() });
+            renderizarReunioes();
+            document.getElementById('reuniao-titulo').value = '';
+            document.getElementById('reuniao-notas').value = '';
+        }
+        function removerReuniao(i) { reunioes.splice(i, 1); renderizarReunioes(); }
+
+        // TAREFAS
+        function renderizarTarefas() {
+            const lista = document.getElementById('lista-tarefas');
+            const resumo = document.getElementById('resumo-tarefas');
+            const contador = document.getElementById('contador-tarefas');
+            if (contador) contador.textContent = tarefas.length;
+            if (lista) lista.innerHTML = tarefas.length === 0 ? '<li style="color:#7a6c5d;">Nenhuma tarefa pendente.</li>' : '';
+            if (resumo) resumo.innerHTML = tarefas.length === 0 ? '<p style="color:#7a6c5d;">Tudo concluído. 🎉</p>' : '<ul style="padding:0;list-style:none;">' + tarefas.slice(0,3).map(t => `<li style="color:#b8a894; padding:4px 0;">• ${t}</li>`).join('') + '</ul>';
+            if (lista) {
+                tarefas.forEach((t, i) => {
+                    lista.innerHTML += `<li style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #36281e; color:#b8a894;">
+                        <span>• ${t}</span><button onclick="removerTarefa(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button>
+                    </li>`;
+                });
+            }
+        }
+        function adicionarTarefa(e) { e.preventDefault(); const input = document.getElementById('input-nova-tarefa'); tarefas.push(input.value.trim()); renderizarTarefas(); input.value = ''; }
+        function removerTarefa(i) { tarefas.splice(i, 1); renderizarTarefas(); }
+
+        // PRODUTOS
+        function renderizarProdutos() {
+            const lista = document.getElementById('lista-produtos');
+            if (!lista) return;
+            lista.innerHTML = produtos.length === 0 ? '<li style="color:#7a6c5d;">Nenum produto cadastrado.</li>' : '';
+            produtos.forEach((p, i) => {
+                lista.innerHTML += `<li style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #36281e; color:#b8a894;">
+                    <span>🏷️ ${p.nome}</span><div><strong style="margin-right:15px; color:#c5a059;">${parseFloat(p.preco).toFixed(2)} €</strong><button onclick="removerProduto(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;">✕</button></div>
+                </li>`;
+            });
+            atualizarSelectProdutos();
+        }
+        function adicionarProduto(e) {
+            e.preventDefault();
+            const nome = document.getElementById('prod-nome').value.trim();
+            const preco = parseFloat(document.getElementById('prod-preco').value);
+            const idx = produtos.findIndex(p => p.nome.toLowerCase() === nome.toLowerCase());
+            if(idx !== -1) produtos[idx].preco = preco; else produtos.push({ nome, preco });
+            renderizarProdutos();
+            document.getElementById('prod-nome').value = ''; document.getElementById('prod-preco').value = '';
+        }
+        function removerProduto(i) { produtos.splice(i, 1); renderizarProdutos(); }
+
+        // ARMAS
         function renderizarTabelaArmas() {
             const lista = document.getElementById('lista-tabela-armas');
             if (!lista) return;
-            lista.innerHTML = '';
-            tabelaArmas.forEach((a) => {
+            lista.innerHTML = tabelaArmas.length === 0 ? '<li style="color:#7a6c5d;">Nenhuma arma cadastrada.</li>' : '';
+            tabelaArmas.forEach((a, i) => {
                 lista.innerHTML += `<li style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #36281e; color:#b8a894;">
-                    <span>⚔️ ${a.nome}</span><div><strong style="margin-right:15px; color:#c5a059;">${parseFloat(a.preco).toFixed(2)} €</strong><button onclick="removerTabelaArma('${a.id}')" style="background:none;border:none;color:#9e2a2b;cursor:pointer;">✕</button></div>
+                    <span>⚔️ ${a.nome}</span><div><strong style="margin-right:15px; color:#c5a059;">${parseFloat(a.preco).toFixed(2)} €</strong><button onclick="removerTabelaArma(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;">✕</button></div>
                 </li>`;
             });
+            atualizarSelectArmas();
         }
         function adicionarTabelaArma(e) {
             e.preventDefault();
             const nome = document.getElementById('tabela-arma-nome').value.trim();
             const preco = parseFloat(document.getElementById('tabela-arma-preco').value);
-            db.ref("tabelaArmas").push({ nome, preco }).then(() => {
-                document.getElementById('tabela-arma-nome').value = '';
-                document.getElementById('tabela-arma-preco').value = '';
-            });
+            const idx = tabelaArmas.findIndex(a => a.nome.toLowerCase() === nome.toLowerCase());
+            if(idx !== -1) tabelaArmas[idx].preco = preco; else tabelaArmas.push({ nome, preco });
+            renderizarTabelaArmas();
+            document.getElementById('tabela-arma-nome').value = ''; document.getElementById('tabela-arma-preco').value = '';
         }
-        function removerTabelaArma(id) { db.ref("tabelaArmas/" + id).remove(); }
+        function removerTabelaArma(i) { tabelaArmas.splice(i, 1); renderizarTabelaArmas(); }
 
-        // --- CRAFTS SAINTS ---
+        // CRAFTS SAINTS
         function renderizarCraftsSaints() {
             const container = document.getElementById('lista-craftsaints');
             if (!container) return;
+
             if (craftsSaints.length === 0) {
                 container.innerHTML = '<p style="color:#7a6c5d;">Nenhum craft registado.</p>';
                 return;
             }
+
             container.innerHTML = '';
-            craftsSaints.forEach((c) => {
+            craftsSaints.forEach((c, index) => {
                 container.innerHTML += `
                 <div style="background:#14100c; border:1px solid #36281e; padding:14px; border-radius:4px; margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -231,97 +613,127 @@
                             <strong style="color:#ffffff; font-size:1rem;">${c.nome}</strong>
                             <span style="color:#c5a059; font-weight:bold; font-size:0.95rem; margin-left:8px;">${c.produz.startsWith('=') ? c.produz : '= ' + c.produz}</span>
                         </div>
-                        <button onclick="removerCraftSaints('${c.id}')" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem;">✕</button>
+                        <button onclick="removerCraftSaints(${index})" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem;">✕</button>
                     </div>
-                    <div style="color:#b8a894; font-size:0.88rem; line-height:1.4; white-space:pre-line; padding-left:24px;">${c.ingredientes}</div>
+                    <div style="color:#b8a894; font-size:0.88rem; line-height:1.4; white-space:pre-line; padding-left:24px;">
+                        ${c.ingredientes}
+                    </div>
                 </div>`;
             });
         }
+
         function adicionarCraftSaints(e) {
             e.preventDefault();
             const nome = document.getElementById('craftsaints-nome').value.trim();
             const ingredientes = document.getElementById('craftsaints-ingredientes').value.trim();
             const produz = document.getElementById('craftsaints-produz').value.trim();
-            db.ref("craftsSaints").push({ nome, ingredientes, produz }).then(() => {
-                document.getElementById('craftsaints-nome').value = '';
-                document.getElementById('craftsaints-ingredientes').value = '';
-                document.getElementById('craftsaints-produz').value = '';
-            });
-        }
-        function removerCraftSaints(id) { db.ref("craftsSaints/" + id).remove(); }
 
-        // --- ROUPA ---
+            craftsSaints.push({ nome, ingredientes, produz });
+            renderizarCraftsSaints();
+
+            document.getElementById('craftsaints-nome').value = '';
+            document.getElementById('craftsaints-ingredientes').value = '';
+            document.getElementById('craftsaints-produz').value = '';
+        }
+
+        function removerCraftSaints(i) {
+            craftsSaints.splice(i, 1);
+            renderizarCraftsSaints();
+        }
+
+        // ROUPA / GUARDA-ROUPA
         function renderizarRoupas() {
             const container = document.getElementById('lista-roupas');
             if (!container) return;
+
             if (roupas.length === 0) {
                 container.innerHTML = '<p style="color:#7a6c5d;">Nenhuma roupa registada.</p>';
                 return;
             }
+
             container.innerHTML = '';
-            roupas.forEach((r) => {
+            roupas.forEach((r, index) => {
                 const imgHtml = r.img ? `<div style="margin-top:10px;"><img src="${r.img}" alt="${r.nome}" style="max-width:100%; height:auto; border-radius:4px; border:1px solid #36281e;" onerror="this.style.display='none'"></div>` : '';
                 container.innerHTML += `
                 <div style="background:#14100c; border:1px solid #36281e; padding:14px; border-radius:4px; margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <strong style="color:#e6dfcc; font-size:1rem;">👕 ${r.nome}</strong>
-                        <button onclick="removerRoupa('${r.id}')" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem;">✕</button>
+                        <button onclick="removerRoupa(${index})" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem;">✕</button>
                     </div>
                     ${imgHtml}
                 </div>`;
             });
         }
+
         function adicionarRoupa(e) {
             e.preventDefault();
             const nome = document.getElementById('roupa-nome').value.trim();
             const img = document.getElementById('roupa-img').value.trim();
-            db.ref("roupas").push({ nome, img }).then(() => {
-                document.getElementById('roupa-nome').value = '';
-                document.getElementById('roupa-img').value = '';
-            });
-        }
-        function removerRoupa(id) { db.ref("roupas/" + id).remove(); }
 
-        // --- RECEITAS ---
+            roupas.push({ nome, img });
+            renderizarRoupas();
+
+            document.getElementById('roupa-nome').value = '';
+            document.getElementById('roupa-img').value = '';
+        }
+
+        function removerRoupa(i) {
+            roupas.splice(i, 1);
+            renderizarRoupas();
+        }
+
+        // RECEITAS
         function renderizarReceitas() {
             const container = document.getElementById('lista-receitas');
             if (!container) return;
+
             if (receitas.length === 0) {
                 container.innerHTML = '<p style="color:#7a6c5d;">Nenhuma receita registada.</p>';
                 return;
             }
+
             container.innerHTML = '';
-            receitas.forEach((r) => {
+            receitas.forEach((r, index) => {
                 container.innerHTML += `
                 <div style="background:#14100c; border:1px solid #36281e; padding:14px; border-radius:4px; margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                         <strong style="color:#e6dfcc; font-size:1rem;">📜 ${r.nome}</strong>
-                        <button onclick="removerReceita('${r.id}')" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem;">✕</button>
+                        <button onclick="removerReceita(${index})" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem;">✕</button>
                     </div>
-                    <p style="color:#b8a894; font-size:0.9rem; margin:0; white-space:pre-line; line-height:1.4;">${r.ingredientes}</p>
+                    <p style="color:#b8a894; font-size:0.9rem; margin:0; white-space:pre-line; line-height:1.4;">
+                        ${r.ingredientes}
+                    </p>
                 </div>`;
             });
         }
+
         function adicionarReceita(e) {
             e.preventDefault();
             const nome = document.getElementById('receita-nome').value.trim();
             const ingredientes = document.getElementById('receita-ingredientes').value.trim();
-            db.ref("receitas").push({ nome, ingredientes }).then(() => {
-                document.getElementById('receita-nome').value = '';
-                document.getElementById('receita-ingredientes').value = '';
-            });
-        }
-        function removerReceita(id) { db.ref("receitas/" + id).remove(); }
 
-        // --- SELECTS ---
+            receitas.push({ nome, ingredientes });
+            renderizarReceitas();
+
+            document.getElementById('receita-nome').value = '';
+            document.getElementById('receita-ingredientes').value = '';
+        }
+
+        function removerReceita(i) {
+            receitas.splice(i, 1);
+            renderizarReceitas();
+        }
+
+        // SELECTS
         function atualizarSelectProdutos() {
             const select = document.getElementById('cli-select-produto');
             if (!select) return;
             select.innerHTML = '<option value="">Selecionar produto...</option>';
-            tabelaArmas.forEach((p, idx) => {
+            produtos.forEach((p, idx) => {
                 select.innerHTML += `<option value="${idx}">${p.nome} (${parseFloat(p.preco).toFixed(2)} €)</option>`;
             });
         }
+
         function atualizarSelectArmas() {
             const select = document.getElementById('enc-select-arma');
             if (!select) return;
@@ -329,27 +741,30 @@
             tabelaArmas.forEach((a, idx) => {
                 select.innerHTML += `<option value="${idx}">${a.nome} (${parseFloat(a.preco).toFixed(2)} €)</option>`;
             });
-            atualizarSelectProdutos();
         }
 
-        // --- PEDIDOS DE CLIENTES ---
+        // PEDIDOS DE CLIENTES
         function adicionarItemAoCarrinho() {
             const prodIdx = document.getElementById('cli-select-produto').value;
             const qtd = parseInt(document.getElementById('cli-qtd').value);
             if (prodIdx === "") return alert("Selecione um produto da tabela!");
-            const prod = tabelaArmas[prodIdx];
+
+            const prod = produtos[prodIdx];
             carrinhoAtual.push({ nome: prod.nome, preco: prod.preco, qtd: qtd, subtotal: prod.preco * qtd });
             renderizarCarrinho();
         }
+
         function removerItemCarrinho(idx) {
             carrinhoAtual.splice(idx, 1);
             renderizarCarrinho();
         }
+
         function renderizarCarrinho() {
             const container = document.getElementById('carrinho-itens');
             const inputTotal = document.getElementById('cli-total-manual');
             container.innerHTML = '';
             let total = 0;
+
             carrinhoAtual.forEach((item, i) => {
                 total += item.subtotal;
                 container.innerHTML += `<div style="display:flex; justify-content:space-between; color:#b8a894; font-size:0.85rem; margin-top:5px; border-bottom:1px solid #231a13; padding-bottom:3px;">
@@ -357,50 +772,68 @@
                     <button type="button" onclick="removerItemCarrinho(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;">✕</button>
                 </div>`;
             });
+
             inputTotal.value = total.toFixed(2);
         }
+
         function guardarPedidoCompleto(e) {
             e.preventDefault();
             const cliente = document.getElementById('cli-nome').value.trim();
             const total = parseFloat(document.getElementById('cli-total-manual').value);
-            if (carrinhoAtual.length === 0) return alert("Adicione pelo menos um produto ao pedido!");
-            db.ref("pedidosClientes").push({ cliente, itens: [...carrinhoAtual], total }).then(() => {
-                carrinhoAtual = [];
-                renderizarCarrinho();
-                document.getElementById('cli-nome').value = '';
+
+            if (carrinhoAtual.length === 0) {
+                return alert("Adicione pelo menos um produto ao pedido antes de guardar!");
+            }
+
+            pedidosClientes.push({
+                cliente: cliente,
+                itens: [...carrinhoAtual],
+                total: total
             });
+
+            carrinhoAtual = [];
+            renderizarCarrinho();
+            document.getElementById('cli-nome').value = '';
+            renderizarPedidosClientes();
         }
+
         function renderizarPedidosClientes() {
             const container = document.getElementById('lista-pedidos-pendentes');
             const contador = document.getElementById('contador-pedidos-clientes');
             if (contador) contador.textContent = pedidosClientes.length;
             if (!container) return;
+
             if (pedidosClientes.length === 0) {
                 container.innerHTML = '<p style="color:#7a6c5d;">Nenhum pedido de cliente registado.</p>';
                 return;
             }
+
             container.innerHTML = '';
-            pedidosClientes.forEach((p) => {
+            pedidosClientes.forEach((p, i) => {
                 const itensStr = p.itens.map(it => `${it.qtd}x ${it.nome}`).join(', ');
                 container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px; color:#b8a894;">
-                    <div style="display:flex; justify-content:space-between;"><strong style="color:#e6dfcc;">👤 ${p.cliente}</strong><button onclick="removerPedidoCliente('${p.id}')" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button></div>
+                    <div style="display:flex; justify-content:space-between;"><strong style="color:#e6dfcc;">👤 ${p.cliente}</strong><button onclick="removerPedidoCliente(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button></div>
                     <p style="margin:5px 0; font-size:0.9rem;">📦 Itens: ${itensStr}</p>
                     <p style="margin:0; color:#c5a059;"><strong>💰 Valor Total: ${p.total.toFixed(2)} €</strong></p>
                 </div>`;
             });
         }
-        function removerPedidoCliente(id) { db.ref("pedidosClientes/" + id).remove(); }
 
-        // --- ENCOMENDAS ---
+        function removerPedidoCliente(i) {
+            pedidosClientes.splice(i, 1);
+            renderizarPedidosClientes();
+        }
+
+        // ENCOMENDAS FEITAS
         function renderizarEncomendas() {
             const container = document.getElementById('lista-encomendas');
             const contador = document.getElementById('contador-encomendas');
             if (contador) contador.textContent = encomendasFeitas.length;
             if (!container) return;
             container.innerHTML = encomendasFeitas.length === 0 ? '<p style="color:#7a6c5d;">Nenhuma encomenda registada.</p>' : '';
-            encomendasFeitas.forEach((e) => {
+            encomendasFeitas.forEach((e, i) => {
                 container.innerHTML += `<div style="background:#14100c; border:1px solid #36281e; padding:12px; border-radius:4px; margin-bottom:10px; color:#b8a894;">
-                    <div style="display:flex; justify-content:space-between;"><strong style="color:#e6dfcc;">📑 ${e.tipo} - ${e.empresa}</strong><button onclick="removerEncomenda('${e.id}')" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button></div>
+                    <div style="display:flex; justify-content:space-between;"><strong style="color:#e6dfcc;">📑 ${e.tipo} - ${e.empresa}</strong><button onclick="removerEncomenda(${i})" style="background:none;border:none;color:#9e2a2b;cursor:pointer;font-weight:bold;">✕</button></div>
                     <p style="margin:5px 0;">👤 Responsável: ${e.pessoa}</p>
                     <p style="margin:5px 0;">🛒 Pedido: ${e.item}</p>
                     <p style="margin:0; color:#c5a059;"><strong>🧾 Fatura / Gasto Total: ${e.gasto.toFixed(2)} €</strong></p>
@@ -413,12 +846,13 @@
             const empresa = document.getElementById('enc-man-empresa').value.trim();
             const item = document.getElementById('enc-man-item').value.trim();
             const gasto = parseFloat(document.getElementById('enc-man-gasto').value);
-            db.ref("encomendasFeitas").push({ tipo: "Geral", pessoa, empresa, item, gasto }).then(() => {
-                document.getElementById('enc-man-pessoa').value = '';
-                document.getElementById('enc-man-empresa').value = '';
-                document.getElementById('enc-man-item').value = '';
-                document.getElementById('enc-man-gasto').value = '';
-            });
+
+            encomendasFeitas.push({ tipo: "Geral", pessoa, empresa, item, gasto });
+            renderizarEncomendas();
+            document.getElementById('enc-man-pessoa').value = '';
+            document.getElementById('enc-man-empresa').value = '';
+            document.getElementById('enc-man-item').value = '';
+            document.getElementById('enc-man-gasto').value = '';
         }
         function adicionarEncomendaArmas(e) {
             e.preventDefault();
@@ -426,38 +860,47 @@
             const empresa = document.getElementById('enc-arm-empresa').value.trim();
             const armaIdx = document.getElementById('enc-select-arma').value;
             const qtd = parseInt(document.getElementById('enc-arm-qtd').value);
-            if(armaIdx === "") return alert("Selecione uma arma!");
+
+            if(armaIdx === "") return alert("Selecione uma arma da tabela!");
             const arma = tabelaArmas[armaIdx];
             const gasto = arma.preco * qtd;
-            db.ref("encomendasFeitas").push({ tipo: "Armamento", pessoa, empresa, item: `${qtd}x ${arma.nome}`, gasto }).then(() => {
-                document.getElementById('enc-arm-pessoa').value = '';
-                document.getElementById('enc-arm-empresa').value = '';
-                document.getElementById('enc-select-arma').value = '';
-                document.getElementById('enc-arm-qtd').value = '1';
-            });
-        }
-        function removerEncomenda(id) { db.ref("encomendasFeitas/" + id).remove(); }
 
-        // --- SPOTS ---
+            encomendasFeitas.push({ tipo: "Armamento", pessoa, empresa, item: `${qtd}x ${arma.nome}`, gasto });
+            renderizarEncomendas();
+            document.getElementById('enc-arm-pessoa').value = '';
+            document.getElementById('enc-arm-empresa').value = '';
+            document.getElementById('enc-select-arma').value = '';
+            document.getElementById('enc-arm-qtd').value = '1';
+        }
+        function removerEncomenda(i) { encomendasFeitas.splice(i, 1); renderizarEncomendas(); }
+
+        // GERENCIAMENTO DE SPOTS
         function adicionarSpot(tipo, event) {
             event.preventDefault();
             const nomeInput = document.getElementById(`spot-${tipo}-nome`);
             const infoInput = document.getElementById(`spot-${tipo}-info`);
             const imgInput = document.getElementById(`spot-${tipo}-img`);
-            db.ref("spotsFarm").push({
+
+            const spot = {
                 nome: nomeInput.value.trim(),
                 info: infoInput.value.trim(),
                 img: imgInput ? imgInput.value.trim() : ''
-            }).then(() => {
-                nomeInput.value = '';
-                infoInput.value = '';
-                if (imgInput) imgInput.value = '';
-            });
+            };
+
+            spots[tipo].push(spot);
+            renderizarSpots(tipo);
+
+            nomeInput.value = '';
+            infoInput.value = '';
+            if (imgInput) imgInput.value = '';
         }
-        function removerSpot(tipo, id, event) {
+
+        function removerSpot(tipo, index, event) {
             event.stopPropagation();
-            db.ref("spotsFarm/" + id).remove();
+            spots[tipo].splice(index, 1);
+            renderizarSpots(tipo);
         }
+
         function toggleSpotDetalhes(idElemento) {
             const el = document.getElementById(idElemento);
             const seta = document.getElementById('seta-' + idElemento);
@@ -471,17 +914,21 @@
                 }
             }
         }
+
         function renderizarSpots(tipo) {
             const container = document.getElementById(`lista-spots-${tipo}`);
             if (!container) return;
+
             if (spots[tipo].length === 0) {
                 container.innerHTML = '<p style="color: #7a6c5d;">Nenhum spot registado.</p>';
                 return;
             }
+
             container.innerHTML = '';
             spots[tipo].forEach((spot, index) => {
                 const idDetalhe = `detalhe-${tipo}-${index}`;
                 const imgHtml = spot.img ? `<div style="margin-top:10px;"><img src="${spot.img}" alt="${spot.nome}" style="max-width:100%; height:auto; border-radius:4px; border:1px solid #36281e;" onerror="this.style.display='none'"></div>` : '';
+                
                 container.innerHTML += `
                 <div style="background:#14100c; border:1px solid #36281e; border-radius:4px; margin-bottom:10px; overflow:hidden;">
                     <div onclick="toggleSpotDetalhes('${idDetalhe}')" style="padding:12px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; user-select:none; background:#18130f;">
@@ -489,7 +936,7 @@
                             <span id="seta-${idDetalhe}" style="color:#c5a059; font-size:0.8rem;">▶</span>
                             <strong style="color:#c5a059; font-size:0.95rem;">${spot.info}</strong>
                         </div>
-                        <button onclick="removerSpot('${tipo}', '${spot.id}', event)" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem; padding:0 5px;">✕</button>
+                        <button onclick="removerSpot('${tipo}', ${index}, event)" style="background:none; border:none; color:#9e2a2b; cursor:pointer; font-weight:bold; font-size:1rem; padding:0 5px;">✕</button>
                     </div>
                     <div id="${idDetalhe}" style="display:none; padding:12px; border-top:1px solid #281e15; background:#100d0a;">
                         <p style="margin:0 0 5px 0; color:#e6dfcc; font-size:0.9rem;"><strong>📍 Local:</strong> ${spot.nome}</p>
@@ -498,10 +945,6 @@
                 </div>`;
             });
         }
-
-        window.onload = function() {
-            carregarDados();
-        };
     </script>
 </body>
 </html>
