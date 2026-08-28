@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel SAINTS - Peaky Blinders</title>
-    <!-- Firebase SDKs -->
-    <!-- Firebase App (obrigatório) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<!-- Firebase Realtime Database -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <!-- Firebase SDKs (Realtime Database) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <style>
         body { background-color: #0c0a08; color: #e6dfcc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
         h1, h2, h3 { color: #c5a059; }
@@ -124,22 +122,21 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO DO FIREBASE (Substitua com os dados do seu projeto)
+        // CONFIGURAÇÃO DO FIREBASE (Realtime Database)
         const firebaseConfig = {
             apiKey: "SUA_API_KEY",
             authDomain: "SEU_AUTH_DOMAIN",
-            projectId: "SEU_PROJECT_ID",
+            databaseURL: "https://saint-2e330-default-rtdb.firebaseio.com",
+            projectId: "saint-2e330",
             storageBucket: "SEU_STORAGE_BUCKET",
             messagingSenderId: "SEU_MESSAGING_SENDER_ID",
             appId: "SEU_APP_ID"
         };
 
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const db = firebase.database();
 
-        // Arrays locais em memória
         let tabelaArmas = [];
-        let produtos = [];
         let craftsSaints = [];
         let roupas = [];
         let receitas = [];
@@ -148,56 +145,48 @@
         let encomendasFeitas = [];
         let spots = { farm: [] };
 
-        // --- FUNÇÕES DE SINCRONIZAÇÃO COM O FIREBASE ---
-
+        // --- CARREGAR DADOS ---
         function carregarDados() {
-            // Tabela de Armas
-            db.collection("tabelaArmas").onSnapshot(snapshot => {
+            db.ref("tabelaArmas").on("value", snapshot => {
                 tabelaArmas = [];
-                snapshot.forEach(doc => tabelaArmas.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(childSnap => tabelaArmas.push({ id: childSnap.key, ...childSnap.val() }));
                 renderizarTabelaArmas();
                 atualizarSelectArmas();
             });
 
-            // Crafts Saints
-            db.collection("craftsSaints").onSnapshot(snapshot => {
+            db.ref("craftsSaints").on("value", snapshot => {
                 craftsSaints = [];
-                snapshot.forEach(doc => craftsSaints.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(childSnap => craftsSaints.push({ id: childSnap.key, ...childSnap.val() }));
                 renderizarCraftsSaints();
             });
 
-            // Guarda-Roupa
-            db.collection("roupas").onSnapshot(snapshot => {
+            db.ref("roupas").on("value", snapshot => {
                 roupas = [];
-                snapshot.forEach(doc => roupas.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(childSnap => roupas.push({ id: childSnap.key, ...childSnap.val() }));
                 renderizarRoupas();
             });
 
-            // Receitas
-            db.collection("receitas").onSnapshot(snapshot => {
+            db.ref("receitas").on("value", snapshot => {
                 receitas = [];
-                snapshot.forEach(doc => receitas.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(childSnap => receitas.push({ id: childSnap.key, ...childSnap.val() }));
                 renderizarReceitas();
             });
 
-            // Pedidos de Clientes
-            db.collection("pedidosClientes").onSnapshot(snapshot => {
+            db.ref("pedidosClientes").on("value", snapshot => {
                 pedidosClientes = [];
-                snapshot.forEach(doc => pedidosClientes.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(childSnap => pedidosClientes.push({ id: childSnap.key, ...childSnap.val() }));
                 renderizarPedidosClientes();
             });
 
-            // Encomendas
-            db.collection("encomendasFeitas").onSnapshot(snapshot => {
+            db.ref("encomendasFeitas").on("value", snapshot => {
                 encomendasFeitas = [];
-                snapshot.forEach(doc => encomendasFeitas.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(childSnap => encomendasFeitas.push({ id: childSnap.key, ...childSnap.val() }));
                 renderizarEncomendas();
             });
 
-            // Spots de Farm
-            db.collection("spotsFarm").onSnapshot(snapshot => {
+            db.ref("spotsFarm").on("value", snapshot => {
                 spots.farm = [];
-                snapshot.forEach(doc => spots.farm.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(childSnap => spots.farm.push({ id: childSnap.key, ...childSnap.val() }));
                 renderizarSpots('farm');
             });
         }
@@ -217,12 +206,12 @@
             e.preventDefault();
             const nome = document.getElementById('tabela-arma-nome').value.trim();
             const preco = parseFloat(document.getElementById('tabela-arma-preco').value);
-            db.collection("tabelaArmas").add({ nome, preco }).then(() => {
+            db.ref("tabelaArmas").push({ nome, preco }).then(() => {
                 document.getElementById('tabela-arma-nome').value = '';
                 document.getElementById('tabela-arma-preco').value = '';
             });
         }
-        function removerTabelaArma(id) { db.collection("tabelaArmas").doc(id).delete(); }
+        function removerTabelaArma(id) { db.ref("tabelaArmas/" + id).remove(); }
 
         // --- CRAFTS SAINTS ---
         function renderizarCraftsSaints() {
@@ -253,13 +242,13 @@
             const nome = document.getElementById('craftsaints-nome').value.trim();
             const ingredientes = document.getElementById('craftsaints-ingredientes').value.trim();
             const produz = document.getElementById('craftsaints-produz').value.trim();
-            db.collection("craftsSaints").add({ nome, ingredientes, produz }).then(() => {
+            db.ref("craftsSaints").push({ nome, ingredientes, produz }).then(() => {
                 document.getElementById('craftsaints-nome').value = '';
                 document.getElementById('craftsaints-ingredientes').value = '';
                 document.getElementById('craftsaints-produz').value = '';
             });
         }
-        function removerCraftSaints(id) { db.collection("craftsSaints").doc(id).delete(); }
+        function removerCraftSaints(id) { db.ref("craftsSaints/" + id).remove(); }
 
         // --- ROUPA ---
         function renderizarRoupas() {
@@ -286,12 +275,12 @@
             e.preventDefault();
             const nome = document.getElementById('roupa-nome').value.trim();
             const img = document.getElementById('roupa-img').value.trim();
-            db.collection("roupas").add({ nome, img }).then(() => {
+            db.ref("roupas").push({ nome, img }).then(() => {
                 document.getElementById('roupa-nome').value = '';
                 document.getElementById('roupa-img').value = '';
             });
         }
-        function removerRoupa(id) { db.collection("roupas").doc(id).delete(); }
+        function removerRoupa(id) { db.ref("roupas/" + id).remove(); }
 
         // --- RECEITAS ---
         function renderizarReceitas() {
@@ -317,12 +306,12 @@
             e.preventDefault();
             const nome = document.getElementById('receita-nome').value.trim();
             const ingredientes = document.getElementById('receita-ingredientes').value.trim();
-            db.collection("receitas").add({ nome, ingredientes }).then(() => {
+            db.ref("receitas").push({ nome, ingredientes }).then(() => {
                 document.getElementById('receita-nome').value = '';
                 document.getElementById('receita-ingredientes').value = '';
             });
         }
-        function removerReceita(id) { db.collection("receitas").doc(id).delete(); }
+        function removerReceita(id) { db.ref("receitas/" + id).remove(); }
 
         // --- SELECTS ---
         function atualizarSelectProdutos() {
@@ -374,9 +363,8 @@
             e.preventDefault();
             const cliente = document.getElementById('cli-nome').value.trim();
             const total = parseFloat(document.getElementById('cli-total-manual').value);
-            if (carrinhoAtual.length === 0) return alert("Adicione pelo menos um produto ao pedido antes de guardar!");
-            
-            db.collection("pedidosClientes").add({ cliente, itens: [...carrinhoAtual], total }).then(() => {
+            if (carrinhoAtual.length === 0) return alert("Adicione pelo menos um produto ao pedido!");
+            db.ref("pedidosClientes").push({ cliente, itens: [...carrinhoAtual], total }).then(() => {
                 carrinhoAtual = [];
                 renderizarCarrinho();
                 document.getElementById('cli-nome').value = '';
@@ -401,7 +389,7 @@
                 </div>`;
             });
         }
-        function removerPedidoCliente(id) { db.collection("pedidosClientes").doc(id).delete(); }
+        function removerPedidoCliente(id) { db.ref("pedidosClientes/" + id).remove(); }
 
         // --- ENCOMENDAS ---
         function renderizarEncomendas() {
@@ -425,7 +413,7 @@
             const empresa = document.getElementById('enc-man-empresa').value.trim();
             const item = document.getElementById('enc-man-item').value.trim();
             const gasto = parseFloat(document.getElementById('enc-man-gasto').value);
-            db.collection("encomendasFeitas").add({ tipo: "Geral", pessoa, empresa, item, gasto }).then(() => {
+            db.ref("encomendasFeitas").push({ tipo: "Geral", pessoa, empresa, item, gasto }).then(() => {
                 document.getElementById('enc-man-pessoa').value = '';
                 document.getElementById('enc-man-empresa').value = '';
                 document.getElementById('enc-man-item').value = '';
@@ -438,17 +426,17 @@
             const empresa = document.getElementById('enc-arm-empresa').value.trim();
             const armaIdx = document.getElementById('enc-select-arma').value;
             const qtd = parseInt(document.getElementById('enc-arm-qtd').value);
-            if(armaIdx === "") return alert("Selecione uma arma da tabela!");
+            if(armaIdx === "") return alert("Selecione uma arma!");
             const arma = tabelaArmas[armaIdx];
             const gasto = arma.preco * qtd;
-            db.collection("encomendasFeitas").add({ tipo: "Armamento", pessoa, empresa, item: `${qtd}x ${arma.nome}`, gasto }).then(() => {
+            db.ref("encomendasFeitas").push({ tipo: "Armamento", pessoa, empresa, item: `${qtd}x ${arma.nome}`, gasto }).then(() => {
                 document.getElementById('enc-arm-pessoa').value = '';
                 document.getElementById('enc-arm-empresa').value = '';
                 document.getElementById('enc-select-arma').value = '';
                 document.getElementById('enc-arm-qtd').value = '1';
             });
         }
-        function removerEncomenda(id) { db.collection("encomendasFeitas").doc(id).delete(); }
+        function removerEncomenda(id) { db.ref("encomendasFeitas/" + id).remove(); }
 
         // --- SPOTS ---
         function adicionarSpot(tipo, event) {
@@ -456,12 +444,11 @@
             const nomeInput = document.getElementById(`spot-${tipo}-nome`);
             const infoInput = document.getElementById(`spot-${tipo}-info`);
             const imgInput = document.getElementById(`spot-${tipo}-img`);
-            const spot = {
+            db.ref("spotsFarm").push({
                 nome: nomeInput.value.trim(),
                 info: infoInput.value.trim(),
                 img: imgInput ? imgInput.value.trim() : ''
-            };
-            db.collection("spotsFarm").add(spot).then(() => {
+            }).then(() => {
                 nomeInput.value = '';
                 infoInput.value = '';
                 if (imgInput) imgInput.value = '';
@@ -469,7 +456,7 @@
         }
         function removerSpot(tipo, id, event) {
             event.stopPropagation();
-            db.collection("spotsFarm").doc(id).delete();
+            db.ref("spotsFarm/" + id).remove();
         }
         function toggleSpotDetalhes(idElemento) {
             const el = document.getElementById(idElemento);
@@ -512,7 +499,6 @@
             });
         }
 
-        // Iniciar carregamento dos dados mal a página abra
         window.onload = function() {
             carregarDados();
         };
